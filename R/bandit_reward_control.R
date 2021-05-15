@@ -44,7 +44,7 @@ control_missing_data <- function(visitor_reward) {
 #'  than or equal to the number of columns. Stops if not respected. Else returns
 #'  TRUE.
 #'
-#'@param visitor_reward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of numeric values
 #'
 #'@return Logical value
 #'
@@ -59,5 +59,25 @@ control_size <- function(visitor_reward) {
     stop("horizon must be at least equal to the number of arms")
   }
 
+  return(TRUE)
+}
+
+#'Are rewards binary values ?
+#'
+#'@description Checks if reward matrix contains only numeric binary values.
+#'  Stops if not. Returns TRUE otherwise.
+#'
+#'@param visitor_reward Numeric matrix
+#'
+#'@return Logical value
+#'
+#'@export
+control_binary <- function(visitor_reward){
+  if(!is.numeric(visitor_reward)){
+    stop("reward data must be numeric")
+  }
+  if(any(mapply(function(v)(v!=1 && v!=0),visitor_reward))){
+    stop("reward data must be binary")
+  }
   return(TRUE)
 }

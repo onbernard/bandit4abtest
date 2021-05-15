@@ -13,3 +13,20 @@ test_that("visitor_reward is checked correctly", {
                "missing data in arm results data")
   expect_equal(bandit_reward_control(just_fine), TRUE)
 })
+
+test_that("binary reward dataframe is checked correctly", {
+  wrong1 <- cbind(c(TRUE,FALSE),c(FALSE,FALSE))
+  wrong2 <- matrix(3,3,4)
+  wrong3 <- cbind(c("lol", "3"), c(1,1))
+  correct1 <- diag(3)
+  correct2 <- matrix(data=c(1,1,0,1),nrow=2,ncol=2)
+
+  expect_error(control_binary(wrong1),
+               "reward data must be numeric")
+  expect_error(control_binary(wrong2),
+               "reward data must be binary")
+  expect_error(control_binary(wrong3),
+               "reward data must be numeric")
+  expect_equal(control_binary(correct1), TRUE)
+  expect_equal(control_binary(correct2), TRUE)
+})
