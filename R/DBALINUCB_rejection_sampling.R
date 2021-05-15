@@ -8,14 +8,16 @@
 #'  \item Choose a cluster.
 #'  \item Calculates the arm probabilities,
 #'  \item Choose the arm with the maximum upper bound (with alpha parameter)
-#'  \item Receives a reward in visitor_reward for the arm and associated iteration
+#'  \item Receives a reward in visitor_reward for the arm and associated
+#'  iteration
 #'  \item Updates the results matrix S.
 #'  }
 #'Returns the calculation time.
 #'Review the estimated, actual averages and number of choices for each arm.
 #'See also \code{\link{ConditionForUCB}}, \code{\link{GenerateMatrixS}},
 #'\code{\link{ProbaMaxForUCB}} and \code{\link{PlayArm}}.
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}}
+#'library
 #'@param dt Dataframe of integer or numeric values
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
@@ -42,7 +44,8 @@
 #'visitor_reward$K1[temp_list] <- NA
 #'visitor_reward$K2[-temp_list] <- NA
 #'#run ucb on missing data
-#'dbalinucb_rejection_sampling_alloc  <- DBALINUCB_rejection_sampling(visitor_reward,alpha = 10)
+#'dbalinucb_rejection_sampling_alloc  <- DBALINUCB_rejection_sampling(
+#'visitor_reward,alpha = 10)
 #'@import tictoc
 #'@export
 DBALINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward), listSerie, listKCentroids , learn_size = as.integer(nrow(dt)*0.3), IsRewardAreBoolean = FALSE , listCategorial=0 , listInteger=0) {

@@ -8,7 +8,8 @@
 #'@param listKCentroids  List of Integer (Number of centroid)
 #'@param plotCentroids Boolean (optional) If you want to see the centroids
 #'@param plotClusters Boolean (optional) If you want to see the clusters
-#'@param  maxIter Integer. Maximum number of allowed iterations for partitional/fuzzy clustering.
+#'@param  maxIter Integer. Maximum number of allowed iterations for
+#'partitional/fuzzy clustering.
 #'
 #'@return Integer value
 #'
@@ -24,7 +25,8 @@
 #'  for (i in 1:length(alpha_list)){
 #'    n = sample(1:1000,1)
 #'    t <- 1:n
-#'    ts <- alpha_list[i] + beta_list[i] * t + arima.sim(list(ma = theta_list[i]), n = length(t))
+#'    ts <- alpha_list[i] + beta_list[i] * t +
+#'    arima.sim(list(ma = theta_list[i]), n = length(t))
 #'    y[temp, "time_series"][[1]] <- list(ts)
 #'    y[temp, "cluster"][[1]] <- i
 #'    y$ID[temp] = temp
@@ -34,7 +36,6 @@
 #'y <- y[sample(nrow(y)),]
 #'obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 10L )
 #'table(obj$dt$cluster, obj$dt$clustertime_series)
-#'@import dtwclust doParallel cluster
 #'
 #'@export
 createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , listKCentroids , plotCentroids = TRUE , plotClusters = TRUE  , maxIter = 10L) {
@@ -51,11 +52,9 @@ createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , list
   }
 
   #fast clustering
-  library(dtwclust)
-  library(doParallel)
-  cl <- makeCluster(detectCores())
-  invisible(clusterEvalQ(cl, library(dtwclust)))
-  registerDoParallel(cl)
+  cl <- parallel::makeCluster(detectCores())
+  invisible(parallel::clusterEvalQ(cl, "tsclust"))
+  doParallel::registerDoParallel(cl)
 
   #object to keep clustering informations
   pc.dba <- c()
@@ -66,14 +65,14 @@ createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , list
 
     # HCLUST
     if(method == "HCLUST"){
-      ts <-   tsclust( dt[[i]], k = listKCentroids[j], type = "h",
+      ts <-   dtwclust::tsclust( dt[[i]], k = listKCentroids[j], type = "h",
                        seed = 3251,
                        distance = "dtw",  trace = TRUE )
     }
 
     # DBA
     if(method == "DBA"){
-      ts <-   tsclust( dt[[i]], k = listKCentroids[j],
+      ts <-   dtwclus::tsclust( dt[[i]], k = listKCentroids[j],
                        centroid = "dba",
                        seed = 3251, trace = TRUE
                        ,control = partitional_control(nrep = 1L,iter.max = maxIter ))
@@ -85,10 +84,10 @@ createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , list
   }
 
   # Stop parallel workers
-  stopCluster(cl)
+  parallel::stopCluster(cl)
 
   # Return to sequential computations. This MUST be done after stopCluster()
-  registerDoSEQ()
+  foreach::registerDoSEQ()
 
   if(plotCentroids == TRUE )  for(i in 1:length(listSerie)) plot(pc.dba[i][[1]], type = "centroids", main=as.character(listSerie[i]))
   if(plotClusters == TRUE )  for(i in 1:length(listSerie)) plot(pc.dba[i][[1]],   main=as.character(listSerie[i]))

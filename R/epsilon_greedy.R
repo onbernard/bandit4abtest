@@ -1,15 +1,13 @@
 #'EpsilonGreedy algorithm
 #'
-#'Control data in visitor_reward with \code{\link{BanditRewardControl}}
-#'Stop if something is wrong.
-#'Generate a matrix to save the results (S).
-#'At each iteration play the best arm with a probability of 1-epsilon and
-#'other arm with probability epsilon
-#'Returns the calculation time.
-#'Return the estimated and actual averages and number of choices for each arm.
-#'See also \code{\link{ConditionForEpsilonGreedy}}, \code{\link{GenerateMatrixS}},
-#'and \code{\link{PlayArm}}.
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Control data in visitor_reward with \code{\link{BanditRewardControl}} Stop if
+#'something is wrong. Generate a matrix to save the results (S). At each
+#'iteration play the best arm with a probability of 1-epsilon and other arm with
+#'probability epsilon Returns the calculation time. Return the estimated and
+#'actual averages and number of choices for each arm. See also
+#'\code{\link{ConditionForEpsilonGreedy}}, \code{\link{GenerateMatrixS}}, and
+#'\code{\link{PlayArm}}. Require \code{\link{tic}} and \code{\link{toc}} from
+#'\code{\link{tictoc}} library
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
@@ -34,7 +32,8 @@
 #'#Run epsilon Greedy algorithm
 #'epsilon_greedy_alloc  <- EpsilonGreedy(visitor_reward,epsilon  = 0.25)
 #'epsilon_greedy_alloc$S
-#'barplot(table(epsilon_greedy_alloc$choice),main = "Histogram of choices",xlab="arm")
+#'barplot(table(epsilon_greedy_alloc$choice),main = "Histogram of choices",
+#'xlab="arm")
 #'epsilon_greedy_alloc$time
 #'epsilon_greedy_alloc$theta_hat
 #'epsilon_greedy_alloc$theta

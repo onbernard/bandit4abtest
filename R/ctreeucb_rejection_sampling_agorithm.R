@@ -1,20 +1,28 @@
 #'ctreeucb_rejection_sampling
 #'
-#' ctreeucb_rejection_sampling automatically create homogeneous groups by a conditional inference method (see  \code{\link{ctree}}) in a collection and processing step before the A/B test (step 1).
-#' These groups are created according to the objective of the test using information from previous items (obtained rewards, items characteristics, temporal information, \ldots).
-#' This information comes from the items that have already been subjected to the original variation (A),
-#' implemented before the test. In the A/B test period (step 2), the method defines as many non-contextual bandits  (see  \code{\link{UCB}}) with rejection sampling method as there are groups.
-#' Exclud any choices which not corresponds to real exepriments in dataset.
-#' Each bandit aims to find the optimal variation associated to its group.
-#' So, a new item is firstly classed into a group and then the associated bandit chooses the variation to which the item must be affected.
+#' ctreeucb_rejection_sampling automatically create homogeneous groups by a
+#' conditional inference method (see  \code{\link{ctree}}) in a collection and
+#' processing step before the A/B test (step 1). These groups are created
+#' according to the objective of the test using information from previous items
+#' (obtained rewards, items characteristics, temporal information, \ldots). This
+#' information comes from the items that have already been subjected to the
+#' original variation (A), implemented before the test. In the A/B test period
+#' (step 2), the method defines as many non-contextual bandits  (see
+#' \code{\link{UCB}}) with rejection sampling method as there are groups. Exclud
+#' any choices which not corresponds to real exepriments in dataset. Each bandit
+#' aims to find the optimal variation associated to its group. So, a new item is
+#' firstly classed into a group and then the associated bandit chooses the
+#' variation to which the item must be affected.
 #'
 #'@param dt  Dataframe of integer numeric or factor values
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param is_reward_are_boolean logical value (optional)
-#'@param learn_size number of items dedicated to the learnset (step 1) (optional),
+#'@param learn_size number of items dedicated to the learnset (step 1)
+#'(optional),
 #'@param arm_for_learn arm dedicated to the learnset (step 1) (optional),
 #'@param explanatory_variable = list of covariates (optional),
-#'@param ctree_control_val	= Various parameters that control aspects of the ‘ctree’ fit (optional),
+#'@param ctree_control_val	= Various parameters that control aspects of the
+#'‘ctree’ fit (optional),
 #'
 #'@return
 #' \itemize{ List of element:
@@ -29,8 +37,9 @@
 #'@examples
 ## Generates 1000 numbers from 2 uniform distributions
 #'size.tot = 1000
-#'set.seed(4649)                          # this makes the example exactly reproducible
-#'x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+#'set.seed(4649)        # this makes the example exactly reproducible
+#'# you have 4, largely uncorrelated predictors
+#'x1 = runif(size.tot, min=0, max=10)
 #'x2 = runif(size.tot, min=0, max=10)
 #'x3 = runif(size.tot, min=0, max=10)
 #'x4 = runif(size.tot, min=0, max=10)
@@ -44,7 +53,8 @@
 #'dt <- as.data.frame(dt)
 #'size.tot = 1000
 #'#remove data
-#'temp_list <- sample(1:nrow(visitor_reward), as.integer(size.tot/2) , replace = FALSE, prob = NULL)
+#'temp_list <- sample(1:nrow(visitor_reward), as.integer(size.tot/2) ,
+#'replace = FALSE, prob = NULL)
 #'visitor_reward$K1[temp_list] <- NA
 #'visitor_reward$K2[-temp_list] <- NA
 #'#run ucb on missing data

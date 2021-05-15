@@ -30,16 +30,15 @@ ctreeucbRejectionSamplingBanditObjectEvaluation(
  }
 }
 \description{
-Run a \code{\link{ctreeucb_rejection_sampling}} using visitor_reward and dt values.
-Control data.
-Stop if something is wrong.
-Exclud any choices which not corresponds to real exepriments in dataset.
-After execution of ctreeucb_bandit, calculates the cumulative regret
-associated with the choices made.
-Review the cumulative regret according iterations and an ctreeucb_bandit object.
-See also \code{\link{ctreeucb}}, \code{\link{ctreeucb_rejection_sampling}}
-Require \code{\link{ctree}} \code{\link{partykit}} library
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run a \code{\link{ctreeucb_rejection_sampling}} using visitor_reward and dt
+values. Control data. Stop if something is wrong. Exclud any choices which not
+corresponds to real exepriments in dataset. After execution of
+ctreeucb_bandit, calculates the cumulative regret associated with the choices
+made. Review the cumulative regret according iterations and an ctreeucb_bandit
+object. See also \code{\link{ctreeucb}},
+\code{\link{ctreeucb_rejection_sampling}} Require \code{\link{ctree}}
+\code{\link{partykit}} library Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library
 }
 \examples{
 ##### Pairewise #####
@@ -67,18 +66,26 @@ x2<- sample(x, size.tot, replace = TRUE, prob = NULL)
 #Results for each variation
 visitor_reward <-  data.frame(K1,K2 )
 #remove data
-temp_list <- sample(1:nrow(visitor_reward), as.integer(size.tot/2) , replace = FALSE, prob = NULL)
+temp_list <- sample(1:nrow(visitor_reward), as.integer(size.tot/2) ,
+replace = FALSE, prob = NULL)
 visitor_reward$K1[temp_list] <- NA
 visitor_reward$K2[-temp_list] <- NA
 summary(visitor_reward)
 dt <- as.data.frame(cbind(x1,x2))
-controle_param = ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,learn_size=1500,  alpha=1, ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
-ctreeucb_rejection_sampling_bandit = ctreeucbRejectionSamplingBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param )
+controle_param = ctreeucb_parameters_control_default(dt=dt,
+visitor_reward=visitor_reward,learn_size=1500,  alpha=1,
+ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
+ctreeucb_rejection_sampling_bandit =
+ctreeucbRejectionSamplingBanditObjectEvaluation(dt=dt,visitor_reward,
+ctree_parameters_control = controle_param )
 #take data for online ab test for other algorithm
-first <- ctreeucb_rejection_sampling_bandit$ctreeucb_rejection_sampling_bandit_alloc$first_train_element
+first <-
+ctreeucb_rejection_sampling_bandit$
+ctreeucb_rejection_sampling_bandit_alloc$first_train_element
 last <- nrow(visitor_reward)
 dt.abtest <- dt[first:last,]
 visitor_reward.abtest <- visitor_reward[first:last,]
 #compare with linucb bandit
-linucb_rejection_sampling_bandit <- LinucbRejectionSamplingBanditObjectEvaluation(dt.abtest,visitor_reward.abtest)
+linucb_rejection_sampling_bandit <-
+LinucbRejectionSamplingBanditObjectEvaluation(dt.abtest,visitor_reward.abtest)
 }

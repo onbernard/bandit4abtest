@@ -1,6 +1,8 @@
 #'ConditionForThompsonSampling
 #'
-#'Samples for each arm an average according to its probability distribution from the beta law (according to number of sucess and trials in S matrix)see function
+#'Samples for each arm an average according to its probability distribution from
+#'the beta law (according to number of sucess and trials in S matrix)see
+#'function
 #'see \code{\link{rbeta}}.
 #'Give the arm with the highest average score.
 #'Returns the best estimated arm and associated probability.
@@ -10,7 +12,8 @@
 #'@param alpha :a parameter (optional)
 #'@param beta :a parameter (optional)
 #'
-#'@return list of choice (number of best arm) and probability (probablity to be the best)
+#'@return list of choice (number of best arm) and probability (probablity to be
+#'the best)
 #'
 #'@examples
 #'## Generates 1000 numbers from 2 uniform distributions

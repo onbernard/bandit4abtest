@@ -13,8 +13,10 @@
 #' @format A data frame with 53940 rows and 10 variables:
 #' \describe{
 #'   \item{countryID}{ID of visitor's country, factor}
-#'   \item{latitude}{last position of visitor, recorded before the test, numeric}
-#'   \item{longitude}{last position of visitor, recorded before the test, numeric}
+#'   \item{latitude}{last position of visitor,
+#'   recorded before the test, numeric}
+#'   \item{longitude}{last position of visitor, recorded before the test,
+#'   numeric}
 #'   \item{langID}{ID of visitor language, factor}
 #'   \item{name}{visitor's OS, factor}
 #'   \item{device}{ID of visitor device, factor}
@@ -44,8 +46,10 @@
 #' @format A data frame with 53940 rows and 10 variables:
 #' \describe{
 #'   \item{countryID}{ID of visitor's country, factor}
-#'   \item{latitude}{last position of visitor, recorded before the test, numeric}
-#'   \item{longitude}{last position of visitor, recorded before the test, numeric}
+#'   \item{latitude}{last position of visitor, recorded before the test,
+#'   numeric}
+#'   \item{longitude}{last position of visitor, recorded before the test,
+#'   numeric}
 #'   \item{langID}{ID of visitor language, factor}
 #'   \item{name}{visitor's OS, factor}
 #'   \item{device}{ID of visitor device, factor}

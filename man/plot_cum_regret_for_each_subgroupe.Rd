@@ -13,12 +13,14 @@ plot_cum_regret_for_each_subgroupe(ctree_ucb_object, average = FALSE)
 
 }
 \description{
-plot cum regret for each subgroupe of ctreeucb object. See \code{\link{ctree}} using visitor_reward and dt values.
+plot cum regret for each subgroupe of ctreeucb object. See \code{\link{ctree}}
+using visitor_reward and dt values.
 }
 \examples{
 size.tot = 1000
-set.seed(4649)                          # this makes the example exactly reproducible
-x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+set.seed(4649)              # this makes the example exactly reproducible
+# you have 4, largely uncorrelated predictors
+x1 = runif(size.tot, min=0, max=10)
 x2 = runif(size.tot, min=0, max=10)
 x3 = runif(size.tot, min=0, max=10)
 x4 = runif(size.tot, min=0, max=10)

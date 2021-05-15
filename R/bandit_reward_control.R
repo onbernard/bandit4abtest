@@ -1,25 +1,63 @@
-#'BanditRewardControl
+#'Visitor rewards dataframe control
 #'
-#'Control data for bandit algorithm.
-#'See also \code{\link{ControlDataMissing}} and \code{\link{DataControlK}}
+#'@description Controls data for bandit algorithm. See also
+#'  \code{\link{control_missing_data}} and \code{\link{control_size}}
 #'
-#'@param visitor_reward Dataframe of integer or numeric values
-#'@param K Integer value (optional)
+#'@details visitor_reward must be a dataframe without NA values, with a number
+#'  of columns greater than or equal to 2 and a number of rows greater than or
+#'  equal to the number of columns.
+#'
+#'@param visitor_reward Dataframe of numeric values
 #'
 #'@return Logical value
 #'
-#'@examples
-#'## Generates 1000 numbers from 2 uniform distributions
-#'set.seed(4434)
-#'K1 <- rnorm(100, 30, .05)
-#'K2 <- rnorm(100, 21, .05)
-#'## Define a dataframe of rewards
-#'visitor_reward <- as.data.frame(cbind(K1,K2) )
-#'## Control
-#'BanditRewardControl(visitor_reward,K=2)
+#'@export
+bandit_reward_control <- function(visitor_reward) {
+  stopifnot(is.data.frame(visitor_reward))
+  control_size(visitor_reward)
+  control_missing_data(visitor_reward)
+  return(TRUE)
+}
+
+#'Missing data control of visitor reward dataframe
+#'
+#'@description Controls data for bandit. Check in a dataframe if there is some
+#'  missing values. Stops if it's not respected. Else returns TRUE.
+#'
+#'@param visitor_reward Dataframe of integer or numeric values
+#'
+#'@return Logical value
 #'
 #'@export
-BanditRewardControl <- function(visitor_reward, K = ncol(visitor_reward)) {
-  DataControlK(visitor_reward = visitor_reward, K = K)
-  ControlDataMissing(visitor_reward = visitor_reward)
+control_missing_data <- function(visitor_reward) {
+  #no missing data
+  if (any(is.na(visitor_reward))) {
+    stop("missing data in arm results data")
+  }
+  return(TRUE)
+}
+
+#'Size control of visitor reward dataframe
+#'
+#'@description Controls number of arms for bandit. Check if the number of
+#'  columns is greater than or equal to 2 and if the number of rows is greater
+#'  than or equal to the number of columns. Stops if not respected. Else returns
+#'  TRUE.
+#'
+#'@param visitor_reward Dataframe of integer or numeric values
+#'
+#'@return Logical value
+#'
+#'@export
+control_size <- function(visitor_reward) {
+  # number of arms must be superior to 2
+  if (ncol(visitor_reward) < 2) {
+    stop("number of arms must be greater than or equal to 2")
+  }
+
+  if(nrow(visitor_reward) < ncol(visitor_reward)){
+    stop("horizon must be at least equal to the number of arms")
+  }
+
+  return(TRUE)
 }

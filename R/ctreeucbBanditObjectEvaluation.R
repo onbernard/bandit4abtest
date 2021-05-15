@@ -1,14 +1,12 @@
 #'ctreeucbBanditObjectEvaluation
 #'
-#'Run a \code{\link{ctreeucb}} using visitor_reward and dt values.
-#'Control data.
-#'Stop if something is wrong.
-#'After execution of ctreeucb_bandit, calculates the cumulative regret
-#'associated with the choices made.
-#'Review the cumulative regret according iterations and an ctreeucb_bandit object.
-#'See also \code{\link{ctreeucb}}, \code{\link{CumulativeRegret}}
-#'Require \code{\link{ctree}} \code{\link{partykit}} library
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Run a \code{\link{ctreeucb}} using visitor_reward and dt values. Control data.
+#'Stop if something is wrong. After execution of ctreeucb_bandit, calculates the
+#'cumulative regret associated with the choices made. Review the cumulative
+#'regret according iterations and an ctreeucb_bandit object. See also
+#'\code{\link{ctreeucb}}, \code{\link{CumulativeRegret}} Require
+#'\code{\link{ctree}} \code{\link{partykit}} library Require \code{\link{tic}}
+#'and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
 #'@param dt Dataframe of integer or numeric values
 #'@param visitor_reward Dataframe of integer or numeric values
@@ -50,9 +48,13 @@
 #'visitor_reward <-  data.frame(K1,K2 )
 #'summary(visitor_reward)
 #'dt <- as.data.frame(cbind(x1,x2))
-#'controle_param = ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,learn_size=1500,  alpha=1, ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
-#'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param )
-#'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param ,average = TRUE)
+#'controle_param = ctreeucb_parameters_control_default(dt=dt,
+#'visitor_reward=visitor_reward,learn_size=1500,  alpha=1,
+#'ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
+#'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,
+#'ctree_parameters_control = controle_param )
+#'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,
+#'ctree_parameters_control = controle_param ,average = TRUE)
 
 #'#take data for online ab test for other algorithm
 #'first <-  ctreeucb_bandit$ctreeucb_bandit_alloc$first_train_element

@@ -5,9 +5,12 @@
 
 #'Returns the calculation time.
 #'Review the estimated, actual averages and number of choices for each arm.
-#'See also  \code{\link{ConditionForKLUCB}}, \code{\link{kl_bernoulli}}, \code{\link{kl_ucb_bernoulli}},
-#' \code{\link{kl_ucb_gaussian}}, \code{\link{GenerateMatrixS}}, and \code{\link{PlayArm}}.
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'See also  \code{\link{ConditionForKLUCB}}, \code{\link{kl_bernoulli}},
+#'\code{\link{kl_ucb_bernoulli}},
+#' \code{\link{kl_ucb_gaussian}}, \code{\link{GenerateMatrixS}}, and
+#' \code{\link{PlayArm}}.
+#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}}
+#'library
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
@@ -43,20 +46,20 @@
 #######  KL-UCB  ############
 
 KLUCB <- function(visitor_reward, K = ncol(visitor_reward), precision=1e-6, c=0){
-  
+
   choice <- c()
   indice <- c()
   S <- GenerateMatrixS(K)
-  
+
   tic()
-  
+
   for (i in 1:K){
     choice[i] <- i
     S <- PlayArm(iter=i, arm=i, S=S, visitor_reward)
   }
-  
+
   for (j in (K+1):nrow(visitor_reward)){
-    
+
     t=sum(S[2,])
     indice <- kl_ucb_bernoulli(S[1,], d=(log(t) + c*(log(log(t)))) / S[2,] , precision=precision, S=S,
                                max_iteration = 50, visitor_reward=visitor_reward[j,])
@@ -64,20 +67,20 @@ KLUCB <- function(visitor_reward, K = ncol(visitor_reward), precision=1e-6, c=0)
     S <- PlayArm(iter=j, arm=choice[j], S=S, visitor_reward)
 
   }
-  
+
   time <- toc()
 
   #coef estimate
   th_hat = S[1,]
-  
+
   #real coef
   th = colMeans(visitor_reward)
-  
+
   message("th_hat")
   message(th_hat)
   message("th real")
   message(th)
-  
-  
+
+
   return(list('S'=S, 'time'=(time$toc - time$tic),'choice'= choice,'theta_hat'=th_hat,'theta'=th))
 }

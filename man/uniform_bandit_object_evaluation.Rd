@@ -19,19 +19,17 @@ uniform_bandit_object_evaluation(
 \item{K}{Integer value (optional)}
 }
 \value{
-\itemize{ List of element:
- \item uniform_bandit_alloc: UniformBandit object ,
- \item cum_reg_uniform_bandit_alloc: List numeric.
- }
+\itemize{ List of element: \item uniform_bandit_alloc: UniformBandit
+object , \item cum_reg_uniform_bandit_alloc: List numeric. }
 }
 \description{
-Run a uniform allocation using visitor_reward values with \code{\link{UniformBandit}} function.
-Stop if something is wrong.
-After execution of UniformBandit, calculates the cumulative regret
-associated with the choices made.
-Review the cumulative regret according iterations and an UniformBandit object.
-See also \code{\link{UniformBandit}}, \code{\link{CumulativeRegret}}
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run a uniform allocation using visitor_reward values with
+\code{\link{UniformBandit}} function. Stop if something is wrong. After
+execution of UniformBandit, calculates the cumulative regret associated with
+the choices made. Review the cumulative regret according iterations and an
+UniformBandit object. See also \code{\link{UniformBandit}},
+\code{\link{CumulativeRegret}} Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library
 }
 \examples{
 ## Generates 1000 numbers from 2 binomial distributions
@@ -42,6 +40,7 @@ K2 <- rbinom(1000, 1, 0.7)
 visitor_reward <- as.data.frame(cbind(K1,K2) )
 #Run uniform bandit allocation with policy evaluation
 uniform_bandit_object_evaluation(visitor_reward)
-uniform_bandit_object_evaluation(visitor_reward,average = TRUE,IsRewardAreBoolean = TRUE)
+uniform_bandit_object_evaluation(visitor_reward,average = TRUE,
+IsRewardAreBoolean = TRUE)
 
 }

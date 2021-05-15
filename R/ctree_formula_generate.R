@@ -1,23 +1,27 @@
 #'ctree_formula_generate
 #'
 #'Generate a conditional inference tree with \code{\link{ctree}} function.
-#'Apply a aecursive partitioning for continuous, censored, ordered, nominal and multivariate response variables in a conditional inference framework.
+#'Apply a aecursive partitioning for continuous, censored, ordered, nominal and
+#'multivariate response variables in a conditional inference framework.
 #'
 #'@param dt  Dataframe of integer numeric or factor values
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param is_reward_are_boolean logical value (optional)
-#'@param learn_size number of items dedicated to the learnset (step 1) (optional),
+#'@param learn_size number of items dedicated to the learnset (step 1)
+#'(optional),
 #'@param arm_for_learn arm dedicated to the learnset (step 1) (optional),
 #'@param explanatory_variable = list of covariates (optional),
-#'@param ctree_control_val	= Various parameters that control aspects of the ‘ctree’ fit (optional),
+#'@param ctree_control_val	= Various parameters that control aspects of the
+#'‘ctree’ fit (optional),
 #'
 #'@return An object of class \code{\link{party}}
 #'
 #'@examples
 ## Generates 1000 numbers from 2 uniform distributions
 #'size.tot = 1000
-#'set.seed(4649)                          # this makes the example exactly reproducible
-#'x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+#'set.seed(4649)                  # this makes the example exactly reproducible
+#'# you have 4, largely uncorrelated predictors
+#'x1 = runif(size.tot, min=0, max=10)
 #'x2 = runif(size.tot, min=0, max=10)
 #'x3 = runif(size.tot, min=0, max=10)
 #'x4 = runif(size.tot, min=0, max=10)
@@ -31,10 +35,17 @@
 #'K3 = crossprod(t(dt),arm_3)
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
-#'ctreeucb_control_val=ctreeucb_parameters_control_default(dt=dt,  visitor_reward= visitor_reward)
-#'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K1',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
-#'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K2',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
-#'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K3',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
+#'ctreeucb_control_val=
+#'ctreeucb_parameters_control_default(dt=dt,  visitor_reward= visitor_reward)
+#'ctree_formula_generate(dt, visitor_reward,
+#'arm_for_learn='K1',explanatory_variable=c('x1','x2','x3','x4'),
+#'learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
+#'ctree_formula_generate(dt, visitor_reward,
+#'arm_for_learn='K2',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,
+#'ctree_control_val=ctreeucb_control_val$ctree_control_val)
+#'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K3',
+#'explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,
+#'ctree_control_val=ctreeucb_control_val$ctree_control_val)
 #'@import partykit
 #'@export
 ctree_formula_generate <- function(dt, visitor_reward,arm_for_learn,explanatory_variable,learn_size,ctree_control_val,print=FALSE){

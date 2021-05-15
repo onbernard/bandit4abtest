@@ -27,7 +27,8 @@ createClusters(
 
 \item{plotClusters}{Boolean (optional) If you want to see the clusters}
 
-\item{maxIter}{Integer. Maximum number of allowed iterations for partitional/fuzzy clustering.}
+\item{maxIter}{Integer. Maximum number of allowed iterations for
+partitional/fuzzy clustering.}
 }
 \value{
 Integer value
@@ -47,7 +48,8 @@ for (j in 1:100){
  for (i in 1:length(alpha_list)){
    n = sample(1:1000,1)
    t <- 1:n
-   ts <- alpha_list[i] + beta_list[i] * t + arima.sim(list(ma = theta_list[i]), n = length(t))
+   ts <- alpha_list[i] + beta_list[i] * t +
+   arima.sim(list(ma = theta_list[i]), n = length(t))
    y[temp, "time_series"][[1]] <- list(ts)
    y[temp, "cluster"][[1]] <- i
    y$ID[temp] = temp
@@ -57,4 +59,5 @@ for (j in 1:100){
 y <- y[sample(nrow(y)),]
 obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 10L )
 table(obj$dt$cluster, obj$dt$clustertime_series)
+
 }

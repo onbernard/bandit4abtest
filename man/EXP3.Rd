@@ -25,21 +25,19 @@ EXP3(visitor_reward, K = ncol(visitor_reward), gamma = 0.05)
  }
 }
 \description{
-Exponential  Weights  for  Exploration  and  Exploitation (EXP3) bandit strategy. Uses a list of weigths which evolve according
-to arm's reward. The gamma parameter is a coefficient for balancing between exploitation and exploration.
-Control data in visitor_reward with \code{\link{IsRewardAreBoolean}}
-Stop if something is wrong.
-Generate a matrix to save the results (S).
-\itemize{ At each iteration
- \item Update weight parameter for each arm
- \item Choose randomly an arm according to the distribution of proba
- \item Receives a reward in visitor_reward for the arm and associated iteration
- \item Updates the results matrix S.
- }
-Returns the calculation time.
-Review the estimated, actual averages and number of choices for each arm.
-See also  \code{\link{ConditionForEXP3}}, \code{\link{GenerateMatrixS}}, and \code{\link{PlayArm}}.
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Exponential  Weights  for  Exploration  and  Exploitation (EXP3) bandit
+strategy. Uses a list of weigths which evolve according to arm's reward. The
+gamma parameter is a coefficient for balancing between exploitation and
+exploration. Control data in visitor_reward with
+\code{\link{IsRewardAreBoolean}} Stop if something is wrong. Generate a matrix
+to save the results (S). \itemize{ At each iteration \item Update weight
+parameter for each arm \item Choose randomly an arm according to the
+distribution of proba \item Receives a reward in visitor_reward for the arm
+and associated iteration \item Updates the results matrix S. } Returns the
+calculation time. Review the estimated, actual averages and number of choices
+for each arm. See also  \code{\link{ConditionForEXP3}},
+\code{\link{GenerateMatrixS}}, and \code{\link{PlayArm}}. Require
+\code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 }
 \examples{
 ## Generates 1000 numbers from 2 uniform distributions

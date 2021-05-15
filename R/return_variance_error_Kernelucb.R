@@ -1,7 +1,7 @@
 #'return_variance_error_Kernelucb
 #'
-#'Cumpute variance of a kernelized regression models with \code{\link{krr}} function (library listdtr)
-#'based on selected data.
+#'Cumpute variance of a kernelized regression models with \code{\link{krr}}
+#'function (library listdtr) based on selected data.
 #'@param choice an integer value associated with the selected arm
 #'@param expected vector of numeric values expected according to a selected arm
 #'@param rewards  vector of numeric values obtained according to a selected arm
@@ -10,8 +10,9 @@
 #'
 #'@examples
 #'size.tot = 1000
-#'set.seed(4649)                          # this makes the example exactly reproducible
-#'x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+#'set.seed(4649)                  # this makes the example exactly reproducible
+#'# you have 4, largely uncorrelated predictors
+#'x1 = runif(size.tot, min=0, max=10)
 #'x2 = runif(size.tot, min=0, max=10)
 #'x3 = runif(size.tot, min=0, max=10)
 #'x4 = runif(size.tot, min=0, max=10)

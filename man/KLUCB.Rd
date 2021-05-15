@@ -30,9 +30,12 @@ Kullback-Leibler Upper Confidence Bound (KL-UCB) bandit strategy.
 Generate a matrix to save the results (S).
 Returns the calculation time.
 Review the estimated, actual averages and number of choices for each arm.
-See also  \code{\link{ConditionForKLUCB}}, \code{\link{kl_bernoulli}}, \code{\link{kl_ucb_bernoulli}},
-\code{\link{kl_ucb_gaussian}}, \code{\link{GenerateMatrixS}}, and \code{\link{PlayArm}}.
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+See also  \code{\link{ConditionForKLUCB}}, \code{\link{kl_bernoulli}},
+\code{\link{kl_ucb_bernoulli}},
+\code{\link{kl_ucb_gaussian}}, \code{\link{GenerateMatrixS}}, and
+\code{\link{PlayArm}}.
+Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}}
+library
 }
 \examples{
 ## Generates 1000 numbers from 2 uniform distributions

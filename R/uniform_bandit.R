@@ -1,17 +1,13 @@
 #'Uniform algorithm
 #'
-#'Control data in visitor_reward with \code{\link{BanditRewardControl}}
-#'Stop if something is wrong.
-#'Generate a matrix to save the results (S).
-#' \itemize{ At each iteration
-#'  \item Choose alternatively an arm
-#'  \item Receives a reward in visitor_reward for the arm and associated iteration
-#'  \item Updates the results matrix S.
-#'  }
-#'Returns the calculation time.
-#'Return the estimated and number of choices for each arm.
-#'See also  \code{\link{GenerateMatrixS}} and \code{\link{PlayArm}}.
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Control data in visitor_reward with \code{\link{BanditRewardControl}} Stop if
+#'something is wrong. Generate a matrix to save the results (S). \itemize{ At
+#'each iteration \item Choose alternatively an arm \item Receives a reward in
+#'visitor_reward for the arm and associated iteration \item Updates the results
+#'matrix S. } Returns the calculation time. Return the estimated and number of
+#'choices for each arm. See also  \code{\link{GenerateMatrixS}} and
+#'\code{\link{PlayArm}}. Require \code{\link{tic}} and \code{\link{toc}} from
+#'\code{\link{tictoc}} library
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)

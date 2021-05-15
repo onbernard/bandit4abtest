@@ -17,7 +17,8 @@ UcbRejectionSamplingBanditObjectEvaluation(
 
 \item{alpha}{Numeric value (optional)}
 
-\item{average}{Boolean values to define the cumulative regret evaluation (simple:FALSE, average:TRUE)}
+\item{average}{Boolean values to define the cumulative regret evaluation
+(simple:FALSE, average:TRUE)}
 }
 \value{
 \itemize{ List of element:
@@ -26,14 +27,14 @@ UcbRejectionSamplingBanditObjectEvaluation(
  }
 }
 \description{
-Run the UCB algorithm with rejection sampling method using visitor_reward values with \code{\link{UCB}} function.
-Exclude any choices which not corresponds to real exepriments in dataset
-Stop if something is wrong.
-After execution of UCB, calculates the cumulative reward
-associated with the choices made.
-Review the cumulative reward according iterations and an ucb rejection sampling object.
-See also \code{\link{UCB_rejection_sampling}}, \code{\link{UCB_rejection_sampling}}
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run the UCB algorithm with rejection sampling method using visitor_reward
+values with \code{\link{UCB}} function. Exclude any choices which not
+corresponds to real exepriments in dataset Stop if something is wrong. After
+execution of UCB, calculates the cumulative reward associated with the choices
+made. Review the cumulative reward according iterations and an ucb rejection
+sampling object. See also \code{\link{UCB_rejection_sampling}},
+\code{\link{UCB_rejection_sampling}} Require \code{\link{tic}} and
+\code{\link{toc}} from \code{\link{tictoc}} library
 }
 \examples{
 ## Generates 10000 numbers from 2 binomial  distributions

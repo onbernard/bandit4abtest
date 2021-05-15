@@ -26,28 +26,24 @@ kernelucb(
 \item{alpha}{Numeric value (optional)}
 }
 \value{
-\itemize{ List of element:
- \item choice: choices of kernelucb,
- \item expected: expected reward of the chosen arms,
- \item time: time of cumputation
- }
+\itemize{ List of element: \item choice: choices of kernelucb, \item
+expected: expected reward of the chosen arms, \item time: time of cumputation
+}
 }
 \description{
-Control data in visitor_reward with \code{\link{BanditRewardControl}}
-Stop if something is wrong.
-\itemize{ At each iteration
- \item Calculates the arm expectedbilities according to a kernel regression of context in dt dataframe
- \item Choose the arm with the maximum upper bound (with alpha parameter)
- \item Receives a reward in visitor_reward for the arm and associated iteration
- \item Updates the results
- }
-Returns the calculation time.
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Control data in visitor_reward with \code{\link{BanditRewardControl}} Stop if
+something is wrong. \itemize{ At each iteration \item Calculates the arm
+expectedbilities according to a kernel regression of context in dt dataframe
+\item Choose the arm with the maximum upper bound (with alpha parameter) \item
+Receives a reward in visitor_reward for the arm and associated iteration \item
+Updates the results } Returns the calculation time. Require \code{\link{tic}}
+and \code{\link{toc}} from \code{\link{tictoc}} library
 }
 \examples{
 size.tot = 1000
-set.seed(4649)                          # this makes the example exactly reproducible
-x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+set.seed(4649)          # this makes the example exactly reproducible
+# you have 4, largely uncorrelated predictors
+x1 = runif(size.tot, min=0, max=10)
 x2 = runif(size.tot, min=0, max=10)
 x3 = runif(size.tot, min=0, max=10)
 x4 = runif(size.tot, min=0, max=10)

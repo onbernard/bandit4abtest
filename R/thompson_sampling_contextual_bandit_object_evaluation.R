@@ -1,13 +1,11 @@
 #'ThompsonSamplingContextualBanditObjectEvaluation
 #'
-#'Run a \code{\link{TSLINUCB}} using visitor_reward and dt values.
-#'Control data.
-#'Stop if something is wrong.
-#'After execution of logitucb_bandit, calculates the cumulative regret
-#'associated with the choices made.
-#'Review the cumulative regret according iterations and an thompsonSamplingContextual_bandit object.
-#'See also \code{\link{TSLINUCB}}, \code{\link{CumulativeRegret}}
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Run a \code{\link{TSLINUCB}} using visitor_reward and dt values. Control data.
+#'Stop if something is wrong. After execution of logitucb_bandit, calculates the
+#'cumulative regret associated with the choices made. Review the cumulative
+#'regret according iterations and an thompsonSamplingContextual_bandit object.
+#'See also \code{\link{TSLINUCB}}, \code{\link{CumulativeRegret}} Require
+#'\code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'Require \code{\link{mvrnorm}} from MASS library.
 #'
 #'@param dt Dataframe of integer or numeric values
@@ -23,18 +21,21 @@
 #'
 #'@examples
 #'size.tot = 1000
-#'set.seed(4649)                          # this makes the example exactly reproducible
-#'x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+#'set.seed(4649)            # this makes the example exactly reproducible
+#'# you have 4, largely uncorrelated predictors
+#'x1 = runif(size.tot, min=0, max=10)
 #'x2 = runif(size.tot, min=0, max=10)
 #'x3 = runif(size.tot, min=0, max=10)
 #'x4 = runif(size.tot, min=0, max=10)
 #'dt = cbind(x1,x2,x3,x4)
 #'#arm reward
 #'arm_1 <-  as.vector(c(-1,9,-8,4))
-#'K1 = 1/(1+exp(- crossprod(t(dt),arm_1))) # inverse logit transform of linear predictor
+#'K1 = 1/(1+exp(- crossprod(t(dt),arm_1))) # inverse logit transform of linear
+#'predictor
 #'K1 = vapply(K1, function(x) rbinom(1, 1, x), as.integer(1L))
 #'arm_2 <-  as.vector(c(-1,2,1,0))
-#'K2 = 1/(1+exp(- crossprod(t(dt),arm_2))) # inverse logit transform of linear predictor
+#'K2 = 1/(1+exp(- crossprod(t(dt),arm_2))) # inverse logit transform of linear
+#'predictor
 #'K2 = vapply(K2, function(x) rbinom(1, 1, x), as.integer(1L))
 #'arm_3 <-  as.vector(c(-1,-5,1,10))
 #'K3 = 1/(1+exp(- crossprod(t(dt),arm_3)))
@@ -42,7 +43,8 @@
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
 #'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward)
-#'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward,average = TRUE)
+#'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward,
+#'average = TRUE)
 #'@export
 #thompson_sampling_contextual_bandit object evaluation
 ThompsonSamplingContextualBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),average = FALSE,IsRewardAreBoolean = TRUE,explanatory_variable=colnames(dt)) {

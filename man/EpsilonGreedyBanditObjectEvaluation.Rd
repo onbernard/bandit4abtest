@@ -30,13 +30,13 @@ EpsilonGreedyBanditObjectEvaluation(
  }
 }
 \description{
-Run the EpsilonGreedy algorithm using visitor_reward values with \code{\link{EpsilonGreedy}} function.
-Stop if something is wrong.
-After execution of EpsilonGreedy, calculates the cumulative regret
-associated with the choices made.
-Review the cumulative regret according iterations and an EpsilonGreedy object.
-See also \code{\link{EpsilonGreedy}}, \code{\link{CumulativeRegret}}
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run the EpsilonGreedy algorithm using visitor_reward values with
+\code{\link{EpsilonGreedy}} function. Stop if something is wrong. After
+execution of EpsilonGreedy, calculates the cumulative regret associated with
+the choices made. Review the cumulative regret according iterations and an
+EpsilonGreedy object. See also \code{\link{EpsilonGreedy}},
+\code{\link{CumulativeRegret}} Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library
 }
 \examples{
 ## Generates 1000 numbers from 2 binomial distributions

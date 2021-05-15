@@ -22,13 +22,15 @@ dbactreeucb_rejection_sampling(
 
 \item{is_reward_are_boolean}{logical value (optional)}
 
-\item{learn_size}{number of items dedicated to the learnset (step 1) (optional),}
+\item{learn_size}{number of items dedicated to the learnset (step 1)
+(optional),}
 
 \item{arm_for_learn}{arm dedicated to the learnset (step 1) (optional),}
 
 \item{explanatory_variable}{= list of covariates (optional),}
 
-\item{ctree_control_val}{Various parameters that control aspects of the ‘ctree’ fit (optional),}
+\item{ctree_control_val}{Various parameters that control aspects of the
+‘ctree’ fit (optional),}
 }
 \value{
 \itemize{ List of element:
@@ -40,18 +42,25 @@ dbactreeucb_rejection_sampling(
  }
 }
 \description{
-dbactreeucb_rejection_sampling automatically create homogeneous groups by a conditional inference method (see  \code{\link{ctree}}) in a collection and processing step before the A/B test (step 1).
-These groups are created according to the objective of the test using information from previous items (obtained rewards, items characteristics, temporal information, \ldots).
-This information comes from the items that have already been subjected to the original variation (A),
-implemented before the test. In the A/B test period (step 2), the method defines as many non-contextual bandits  (see  \code{\link{UCB}}) with rejection sampling method as there are groups.
-Exclud any choices which not corresponds to real exepriments in dataset.
-Each bandit aims to find the optimal variation associated to its group.
-So, a new item is firstly classed into a group and then the associated bandit chooses the variation to which the item must be affected.
+dbactreeucb_rejection_sampling automatically create homogeneous groups by a
+conditional inference method (see  \code{\link{ctree}}) in a collection and
+processing step before the A/B test (step 1). These groups are created
+according to the objective of the test using information from previous items
+(obtained rewards, items characteristics, temporal information, \ldots). This
+information comes from the items that have already been subjected to the
+original variation (A), implemented before the test. In the A/B test period
+(step 2), the method defines as many non-contextual bandits  (see
+\code{\link{UCB}}) with rejection sampling method as there are groups. Exclud
+any choices which not corresponds to real exepriments in dataset. Each bandit
+aims to find the optimal variation associated to its group. So, a new item is
+firstly classed into a group and then the associated bandit chooses the
+variation to which the item must be affected.
 }
 \examples{
 size.tot = 9000
-set.seed(4649)                          # this makes the example exactly reproducible
-x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+set.seed(4649)          # this makes the example exactly reproducible
+# you have 4, largely uncorrelated predictors
+x1 = runif(size.tot, min=0, max=10)
 x2 = runif(size.tot, min=0, max=10)
 x3 = runif(size.tot, min=0, max=10)
 x4 = runif(size.tot, min=0, max=10)
@@ -76,7 +85,8 @@ for (j in 1:3000){
  for (i in 1:length(alpha_list)){
    n = sample(1:100,1)
    t <- 1:n
-   ts <- alpha_list[i] + beta_list[i] * t + arima.sim(list(ma = theta_list[i]), n = length(t))
+   ts <- alpha_list[i] + beta_list[i] * t + arima.sim(list(
+   ma = theta_list[i]), n = length(t))
    y[temp, "time_series"][[1]] <- list(ts)
    y[temp, "cluster"][[1]] <- i
    y$ID[temp] = temp
@@ -97,8 +107,10 @@ dt$x2 <- as.numeric(dt$x2)
 dt$x3 <- as.numeric(dt$x3)
 dt$x4 <- as.numeric(dt$x4)
 K=ncol(visitor_reward)
-ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)
+ctree_parameters_control=ctreeucb_parameters_control_default(dt,
+visitor_reward)
 listSerie = c("time_series")
 listKCentroids=c(3)
-dbactreeucb_rejection_sampling(dt,visitor_reward,K, listSerie, listKCentroids , ctree_parameters_control)
+dbactreeucb_rejection_sampling(dt,visitor_reward,K, listSerie, listKCentroids,
+ctree_parameters_control)
 }

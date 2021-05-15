@@ -21,7 +21,8 @@ UcbBanditObjectEvaluation(
 
 \item{alpha}{Numeric value (optional)}
 
-\item{average}{Boolean values to define the cumulative regret evaluation (simple:FALSE, average:TRUE)}
+\item{average}{Boolean values to define the cumulative regret evaluation
+(simple:FALSE, average:TRUE)}
 }
 \value{
 \itemize{ List of element:
@@ -30,13 +31,12 @@ UcbBanditObjectEvaluation(
  }
 }
 \description{
-Run the UCB algorithm using visitor_reward values with \code{\link{UCB}} function.
-Stop if something is wrong.
-After execution of UCB, calculates the cumulative regret
-associated with the choices made.
-Review the cumulative regret according iterations and an ucb object.
-See also \code{\link{UCB}}, \code{\link{CumulativeRegret}}
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run the UCB algorithm using visitor_reward values with \code{\link{UCB}}
+function. Stop if something is wrong. After execution of UCB, calculates the
+cumulative regret associated with the choices made. Review the cumulative
+regret according iterations and an ucb object. See also \code{\link{UCB}},
+\code{\link{CumulativeRegret}} Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library
 }
 \examples{
 ## Generates 1000 numbers from 2 binomial distributions
@@ -47,5 +47,6 @@ K2 <- rbinom(1000, 1, 0.7)
 visitor_reward <- as.data.frame(cbind(K1,K2) )
 #Run UCB algorithm with policy evaluation
 UcbBanditObjectEvaluation(visitor_reward,alpha = 1)
-UcbBanditObjectEvaluation(visitor_reward,alpha = 1,average = TRUE,IsRewardAreBoolean = TRUE)
+UcbBanditObjectEvaluation(visitor_reward,alpha = 1,average = TRUE,
+IsRewardAreBoolean = TRUE)
 }

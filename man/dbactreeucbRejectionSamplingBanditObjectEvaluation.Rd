@@ -32,21 +32,21 @@ dbactreeucbRejectionSamplingBanditObjectEvaluation(
  }
 }
 \description{
-Run a \code{\link{dbactreeucb_rejection_sampling}} using visitor_reward and dt values.
-Control data.
-Stop if something is wrong.
-Exclud any choices which not corresponds to real exepriments in dataset.
-After execution of ctreeucb_bandit, calculates the cumulative regret
-associated with the choices made.
-Review the cumulative regret according iterations and an ctreeucb_bandit object.
-See also \code{\link{ctreeucb}}, \code{\link{ctreeucb_rejection_sampling}}
-Require \code{\link{ctree}} \code{\link{partykit}} library
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+Run a \code{\link{dbactreeucb_rejection_sampling}} using visitor_reward and dt
+values. Control data. Stop if something is wrong. Exclud any choices which not
+corresponds to real exepriments in dataset. After execution of
+ctreeucb_bandit, calculates the cumulative regret associated with the choices
+made. Review the cumulative regret according iterations and an ctreeucb_bandit
+object. See also \code{\link{ctreeucb}},
+\code{\link{ctreeucb_rejection_sampling}} Require \code{\link{ctree}}
+\code{\link{partykit}} library Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library
 }
 \examples{
 size.tot = 9000
-set.seed(4649)                          # this makes the example exactly reproducible
-x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+set.seed(4649)              # this makes the example exactly reproducible
+# you have 4, largely uncorrelated predictors
+x1 = runif(size.tot, min=0, max=10)
 x2 = runif(size.tot, min=0, max=10)
 x3 = runif(size.tot, min=0, max=10)
 x4 = runif(size.tot, min=0, max=10)
@@ -71,7 +71,8 @@ for (j in 1:3000){
  for (i in 1:length(alpha_list)){
    n = sample(1:100,1)
    t <- 1:n
-   ts <- alpha_list[i] + beta_list[i] * t + arima.sim(list(ma = theta_list[i]), n = length(t))
+   ts <- alpha_list[i] + beta_list[i] * t + arima.sim(
+   list(ma = theta_list[i]), n = length(t))
    y[temp, "time_series"][[1]] <- list(ts)
    y[temp, "cluster"][[1]] <- i
    y$ID[temp] = temp
@@ -92,8 +93,10 @@ dt$x2 <- as.numeric(dt$x2)
 dt$x3 <- as.numeric(dt$x3)
 dt$x4 <- as.numeric(dt$x4)
 K=ncol(visitor_reward)
-ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)
+ctree_parameters_control=ctreeucb_parameters_control_default(dt,
+visitor_reward)
 listSerie = c("time_series")
 listKCentroids=c(3)
-dbactreeucbRejectionSamplingBanditObjectEvaluation(dt,visitor_reward,K, listSerie, listKCentroids , ctree_parameters_control)
+dbactreeucbRejectionSamplingBanditObjectEvaluation(dt,visitor_reward,K,
+listSerie, listKCentroids , ctree_parameters_control)
 }

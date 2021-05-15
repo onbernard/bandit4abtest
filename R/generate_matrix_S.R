@@ -1,21 +1,22 @@
-#' Generate a S Matrix
+#' Generate a S matrix
 #'
-#' Returns a matrix initialized to 0 of dimension K by 2.
-#' Allows to save the average empirical reward (first line) and number of trials (second line) of each arm into a matrix S.
-#' Require a numercial values to define the number of possible arm
+#' @description Generates the matrix used to store UCB computation variables.
+#'   This is a 2 by K (number of arms) matrix with each columns corresponding to
+#'   an arm. First row will store the estimated reward expectation, second row
+#'   the number of times the arm was played.
 #'
-#'@param x Integer variable
+#'@param K Integer variable. Number of arms
 #'
 #'@return Numeric matrix
 #'
 #'@examples
 #'K = 2
-#'GenerateMatrixS(K)
+#'generate_matrix_S(K)
 #'
 #'@export
-GenerateMatrixS <- function(x) {
-  S <- matrix(rep(0,2*x), nrow = 2, ncol = x)
-  colnames(S) <- paste('bandit', 1:x)
+generate_matrix_S <- function(K) {
+  S <- matrix(0,2,K)
+  colnames(S) <- paste('arm', 1:K)
   rownames(S) <- c("average reward","trials")
-  return (S)
+  return(S)
 }

@@ -33,14 +33,14 @@ ThompsonSamplingBanditObjectEvaluation(
  }
 }
 \description{
-Run the Thompson Sampling algorithm using visitor_reward values with \code{\link{ThompsonSampling}} function.
-Stop if something is wrong.
-After execution of Thompson Sampling, calculates the cumulative regret
-associated with the choices maded.
-Review the cumulative regret according iterations and an thompson sampling object.
-See also \code{\link{ThompsonSampling}}, \code{\link{CumulativeRegret}}
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library.
-Average option implies a regret based on conditional inference tree model.
+Run the Thompson Sampling algorithm using visitor_reward values with
+\code{\link{ThompsonSampling}} function. Stop if something is wrong. After
+execution of Thompson Sampling, calculates the cumulative regret associated
+with the choices maded. Review the cumulative regret according iterations and
+an thompson sampling object. See also \code{\link{ThompsonSampling}},
+\code{\link{CumulativeRegret}} Require \code{\link{tic}} and \code{\link{toc}}
+from \code{\link{tictoc}} library. Average option implies a regret based on
+conditional inference tree model.
 }
 \examples{
 ## Generates 1000 numbers from 2 binomial distributions
@@ -51,5 +51,6 @@ K2 <- rbinom(1000, 1, 0.7)
 visitor_reward <- as.data.frame(cbind(K1,K2) )
 #Run Thompson Sampling algorithm with policy evaluation
 ThompsonSamplingBanditObjectEvaluation(visitor_reward,alpha = 1, beta = 1 )
-ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha = 1, beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE)
+ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha=1,
+beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE)
 }

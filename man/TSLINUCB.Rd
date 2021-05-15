@@ -25,23 +25,21 @@ TSLINUCB(dt, visitor_reward, alpha = 1, K = ncol(visitor_reward), iter = 10)
  }
 }
 \description{
-Control data in visitor_reward with \code{\link{BanditRewardControl}}
-Stop if something is wrong.
-\itemize{ At each iteration
- \item Sample a reward  from multivariate distribution (with covariance and means) for each arm f
- \item Choose the arm with the highest expected reward
- \item Receives a reward in visitor_reward for the arm and associated iteration
- \item Updates the results matrix S.
- }
-Returns the calculation time.
-Review the estimated, actual coefficient for each arm.
-See also  \code{\link{ReturnRealTheta}},
-Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library and  \code{\link{mvrnorm}} from MASS library.
+Control data in visitor_reward with \code{\link{BanditRewardControl}} Stop if
+something is wrong. \itemize{ At each iteration \item Sample a reward  from
+multivariate distribution (with covariance and means) for each arm f \item
+Choose the arm with the highest expected reward \item Receives a reward in
+visitor_reward for the arm and associated iteration \item Updates the results
+matrix S. } Returns the calculation time. Review the estimated, actual
+coefficient for each arm. See also  \code{\link{ReturnRealTheta}}, Require
+\code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library and
+\code{\link{mvrnorm}} from MASS library.
 }
 \examples{
 size.tot = 1000
-set.seed(4649)                          # this makes the example exactly reproducible
-x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+set.seed(4649)              # this makes the example exactly reproducible
+# you have 4, largely uncorrelated predictors
+x1 = runif(size.tot, min=0, max=10)
 x2 = runif(size.tot, min=0, max=10)
 x3 = runif(size.tot, min=0, max=10)
 x4 = runif(size.tot, min=0, max=10)

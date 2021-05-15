@@ -22,8 +22,9 @@ cumulativeRegretAverage(
 List of numeric values
 }
 \description{
-Plot the cumulative regret overt the time. Diff bewteen arm with maximal average and chosen arms
-Return a list with cumulative regret at each iterations
+Plot the cumulative regret overt the time. Diff bewteen arm with maximal
+average and chosen arms Return a list with cumulative regret at each
+iterations
 }
 \examples{
 ##### Pairewise #####
@@ -55,5 +56,6 @@ dt <- as.data.frame(cbind(x1,x2))
 #Random choices
 choice <- sample(c(1,2), size.tot, replace = TRUE)
 cumulativeRegretAverage(choice, visitor_reward)
-#cumulativeRegretAverage(choice, visitor_reward,dt=dt,explanatory_variable=c("x1","x2"))
+#cumulativeRegretAverage(choice, visitor_reward,dt=dt,
+explanatory_variable=c("x1","x2"))
 }

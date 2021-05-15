@@ -1,6 +1,7 @@
 #'Return list of cumulative reward
 #'
-#'Return a list with cumulative rewards at each iterations. Can be used for rejection samplig method.
+#'Return a list with cumulative rewards at each iterations. Can be used for
+#'rejection samplig method.
 #'
 #'@param choice  Integer list
 #'@param visitor_reward dataframe of integer or numeric values

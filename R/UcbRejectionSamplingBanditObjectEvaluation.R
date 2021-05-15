@@ -1,18 +1,19 @@
 #'UcbRejectionSamplingBanditObjectEvaluation
 #'
-#'Run the UCB algorithm with rejection sampling method using visitor_reward values with \code{\link{UCB}} function.
-#'Exclude any choices which not corresponds to real exepriments in dataset
-#'Stop if something is wrong.
-#'After execution of UCB, calculates the cumulative reward
-#'associated with the choices made.
-#'Review the cumulative reward according iterations and an ucb rejection sampling object.
-#'See also \code{\link{UCB_rejection_sampling}}, \code{\link{UCB_rejection_sampling}}
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Run the UCB algorithm with rejection sampling method using visitor_reward
+#'values with \code{\link{UCB}} function. Exclude any choices which not
+#'corresponds to real exepriments in dataset Stop if something is wrong. After
+#'execution of UCB, calculates the cumulative reward associated with the choices
+#'made. Review the cumulative reward according iterations and an ucb rejection
+#'sampling object. See also \code{\link{UCB_rejection_sampling}},
+#'\code{\link{UCB_rejection_sampling}} Require \code{\link{tic}} and
+#'\code{\link{toc}} from \code{\link{tictoc}} library
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
-#'@param average Boolean values to define the cumulative regret evaluation (simple:FALSE, average:TRUE)
+#'@param average Boolean values to define the cumulative regret evaluation
+#'  (simple:FALSE, average:TRUE)
 #'
 #'@return
 #' \itemize{ List of element:

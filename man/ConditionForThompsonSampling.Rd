@@ -16,10 +16,13 @@ ConditionForThompsonSampling(S, K = ncol(S), alpha = 1, beta = 1)
 \item{beta}{:a parameter (optional)}
 }
 \value{
-list of choice (number of best arm) and probability (probablity to be the best)
+list of choice (number of best arm) and probability (probablity to be
+the best)
 }
 \description{
-Samples for each arm an average according to its probability distribution from the beta law (according to number of sucess and trials in S matrix)see function
+Samples for each arm an average according to its probability distribution from
+the beta law (according to number of sucess and trials in S matrix)see
+function
 see \code{\link{rbeta}}.
 Give the arm with the highest average score.
 Returns the best estimated arm and associated probability.

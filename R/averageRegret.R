@@ -43,17 +43,18 @@
 #'  for(i in 1:ncol(visitor_reward)){
 #'### learning  ###
 #'#Generate formula and tree
-#'ctree_models[[i]] <-  ctree_formula_generate(dt = dt,
-#'                                             visitor_reward = visitor_reward,
-#'                                             ctree_control_val = ctree_control(teststat = c("quadratic")),
-#'                                             arm_for_learn = colnames(visitor_reward[i]),
-#'                                             explanatory_variable= c("x1","x2"),
-#'                                             learn_size = nrow(dt))
-#' }
-#'regret <- averageRegret(choice=choice,visitor_reward=visitor_reward,dt,ctree_models)
+#'ctree_models[[i]] <-
+#'ctree_formula_generate(dt = dt, visitor_reward = visitor_reward,
+#'ctree_control_val = ctree_control(teststat = c("quadratic")), arm_for_learn =
+#'colnames(visitor_reward[i]), explanatory_variable= c("x1","x2"), learn_size =
+#'nrow(dt)) }
+#'regret <- averageRegret(choice=choice,
+#'visitor_reward=visitor_reward,dt,ctree_models)
 #'plot(1:size.tot,  cumsum(regret))
 #ctreeucbobjet <- ctreeucb(dt,visitor_reward)
-#regret <- averageRegret(choice=ctreeucbobjet$choice,visitor_reward=visitor_reward[ctreeucbobjet$first_train_element:size.tot,],dt[ctreeucbobjet$first_train_element:size.tot,],ctree_models)
+#regret <- averageRegret(choice=ctreeucbobjet$choice,
+#'visitor_reward=visitor_reward[ctreeucbobjet$first_train_element:size.tot,],
+#'dt[ctreeucbobjet$first_train_element:size.tot,],ctree_models)
 #plot(1:length(regret),  cumsum(regret))
 #'@export
 averageRegret <- function(choice, visitor_reward,dt,ctree_models,isRewardAreBoolean=FALSE) {

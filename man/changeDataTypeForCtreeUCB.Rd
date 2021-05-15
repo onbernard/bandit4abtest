@@ -18,14 +18,16 @@ List with the updated dataframe dt and the updated visitor_reward
 }
 \description{
 Check if a reward is defined as logical value: change reward type as factor.
-Check if a a colonm of covariates is caractere or logical: change type as factor.
+Check if a a colonm of covariates is caractere or logical: change type as
+factor.
 }
 \examples{
 c1 <- rep("Test",100)
 dt <- as.data.frame(c1)
 K1 <- sample(c(0,1),replace=TRUE,size= 100)
 visitor_reward <- as.data.frame(K1)
-temp <- changeDataTypeForCtreeUCB(dt=dt,visitor_reward=visitor_reward,is_reward_are_boolean=TRUE)
+temp <- changeDataTypeForCtreeUCB(dt=dt,visitor_reward=visitor_reward,
+is_reward_are_boolean=TRUE)
 is.factor(temp$dt$c1)
 is.factor(temp$visitor_reward[,1])
 }
