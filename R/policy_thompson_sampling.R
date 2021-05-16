@@ -1,41 +1,43 @@
 #'Thompson Sampling algorithm
 #'
 #'@description A Thompson sampling (TS) bandit strategy implemented by sampling,
-#'  in each round, averages from a posterior distribution
-#'  \code{\link{condition_for_thompson_sampling}}, and choosing the action that
-#'  maximizes the expected reward given the sampled average. Conceptually, this
-#'  means that the player instantiates their beliefs randomly in each round, and
-#'  then acts optimally according to them.
-#'  Control data in visitor_reward with \code{\link{bandit_reward_control}} and
-#'  \code{\link{control_binary}}.
-#'  Generates a matrix to save the results (S).
+#'  in each round, averages from a posterior distribution and choosing the
+#'  action that maximizes the expected reward given the sampled average.
+#'  Conceptually, this means that the player instantiates their beliefs randomly
+#'  in each round, and then acts optimally according to them.
+#'
 #'  \itemize{ At each iteration
-#'  \item Sample an averages from a posterior in S for each arm (beta
+#'  \item Sample an averages from a prior for each arm (beta
 #'  distribution with alpha and beta parameters)
 #'  \item Choose the arm with the highest average
 #'  \item Receives a reward in visitor_reward for the arm and associated
 #'  iteration
-#'  \item Updates the results matrix S. }
+#'  \item Update the prior according to the reward. }
 #'
-#'  Returns the choice and probability history, computation time, estimated and
-#'  real reward expectations.
+#'  The function keeps track of each arm estimated reward expectation and number
+#'  of trials. These are returned at the end of the computation in addition to
+#'  the arm played and at each iteration, the actual reward expectations and the
+#'  computation time.
 #'
 #'  See also \code{\link{condition_for_thompson_sampling}},
 #'  \code{\link{generate_matrix_S}}, and \code{\link{play_arm}}.
+#'
+#'  Reward input is checked for correct dimensions and values. These must be
+#'  binary (either numeric or integer ones and zeros) ! See
+#'  \code{\link{bandit_reward_control}} and \code{\link{control_binary}}.
 #'
 #'@param visitor_reward Dataframe of numeric values
 #'@param alpha          Numeric value (optional)
 #'@param beta           Numeric value (optional)
 #'
 #'@return
-#' \itemize{ List of elements :
-#'  \item S         : numeric matrix of UCB parameters
-#'  \item choice    : numeric vector of arm choice history
-#'  \item proba     : numeric vector of max UCB history
-#'  \item time      : total computation time
-#'  \item theta_hat : estimated reward expectations
-#'  \item theta     : real reward expectations
-#'  }
+#' \itemize{ List of element:
+#'  \item S         : Means and trials matrix
+#'  \item choice    : Choice history vector
+#'  \item proba     : Max probability history vector
+#'  \item time      : Computation time
+#'  \item theta_hat : Final estimated reward expectation of each arm
+#'  \item theta     : Actual reward expectation of each arm}
 #'
 #'
 #'
@@ -50,32 +52,27 @@
 #'
 #'@export
 policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
-  # data control
+  # Data control
   bandit_reward_control(visitor_reward)
-
-  # data formatting
+  # Data formatting
   visitor_reward <- as.matrix(visitor_reward) * 1
   K <- ncol(visitor_reward)
-
-  # more data control
+  # More data control
   control_binary(visitor_reward)
-
-  # choice and max probability history vectors
+  # Choice and max probability history vectors
   choice <- c()
   proba <- c()
-
-  # means and trials matrix
+  # Means and trials matrix
   S <- generate_matrix_S(K)
 
   tictoc::tic()
-
-  # initialization : play each arm once
+  # Initialization : play each arm once
+  choice[1:K] <- c(1:K)
+  proba[1:K] <- 1/K
   for (j in 1:K) {
     S <- play_arm(iter=j, arm=j, S=S, visitor_reward)
-    choice[1:K] <- c(1:K)
-    proba[1:K] <- 1/K
   }
-
+  # Iterate over horizon
   for (i in (K+1):nrow(visitor_reward)) {
     # sample an average from posterior distribution
     distrib <- condition_for_thompson_sampling(S, alpha, beta)
@@ -89,10 +86,9 @@ policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
 
   time <- tictoc::toc()
 
-  # coefficients estimate
+  # Estimated reward expectations
   th_hat=S[1,]
-
-  # real coefficients
+  # Actual reward expectations
   th = colMeans(visitor_reward)
 
   message("th_hat")
@@ -112,7 +108,7 @@ policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
 #'
 #'@description Samples for each arm an average according to its probability
 #'  distribution from the beta law (according to number of sucess and trials in
-#'  S matrix). See also \code{\link{rbeta}}. Give the arm with the highest
+#'  S matrix). See also \code{\link{stats::rbeta}}. Give the arm with the highest
 #'  average score. Returns vector containing each arm sample.
 #'
 #'@param S          : Numerical matrix of means and trials
@@ -146,13 +142,10 @@ policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
 #'
 #'@export
 condition_for_thompson_sampling <- function(S, alpha=1, beta=1) {
-
   distrib <- list()
-
   for (j in 1:K) {
     #Sample a mean from a beta distribution of means
     distrib[j] <- stats::rbeta(1, alpha +  S[1,j]*S[2,j], beta + S[2,j] - S[1,j]*S[2,j])
   }
-
   return(distrib)
 }

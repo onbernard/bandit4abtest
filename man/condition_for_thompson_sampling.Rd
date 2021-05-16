@@ -17,7 +17,7 @@ Vector containing each arm sample
 \description{
 Samples for each arm an average according to its probability
  distribution from the beta law (according to number of sucess and trials in
- S matrix). See also \code{\link{rbeta}}. Give the arm with the highest
+ S matrix). See also \code{\link{stats::rbeta}}. Give the arm with the highest
  average score. Returns vector containing each arm sample.
 }
 \examples{

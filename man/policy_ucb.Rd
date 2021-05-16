@@ -12,32 +12,37 @@ policy_ucb(visitor_reward, alpha = 1)
 \item{alpha}{Numeric value. Exploration parameter (optional)}
 }
 \value{
-\itemize{ List of elements :
- \item S         : numeric matrix of UCB parameters
- \item choice    : numeric vector of arm choice history
- \item proba     : numeric vector of max UCB history
- \item time      : total computation time
- \item theta_hat : estimated reward expectations
- \item theta     : real reward expectations
- }
+\itemize{ List of element:
+ \item S         : Means and trials matrix
+ \item choice    : Choice history vector
+ \item proba     : Max probability history vector
+ \item time      : Computation time
+ \item theta_hat : Final estimated reward expectation of each arm
+ \item theta     : Actual reward expectation of each arm}
 }
 \description{
-Controls data in visitor_reward with
- \code{\link{bandit_reward_control}}. Generates the UCB computation variables
- in matrix S.
+The Upper Confidence Bound algorithm is used in stochastic bandit
+ with finitely many arms problems. It attributes to each arm an upper bound
+ of its reward expectation according to past rewards and number of trials.
+
  \itemize{ At each iteration
  \item Computes the upper confidence bounds
- \item Choose the arm with the maximum upper bound (with alpha parameter)
+ \item Chooses the arm with the maximum upper bound (with alpha parameter)
  \item Receives a reward in visitor_reward for the arm and associated
  iteration
- \item Updates the UCB computation variables according to that reward
+ \item Updates the means and number of trials
  }
- Returns the choice and probability history, computation time, estimated and
- real reward expectations.
- See also
- \code{\link{generate_matrix_S}},
- \code{\link{proba_max_for_ucb}} and
- \code{\link{play_arm}}.
+
+ The function keeps track of each arm estimated reward expectation and number
+ of trials. These are returned at the end of the computation in addition to
+ the arm played and at each iteration, the actual reward expectations and the
+ computation time.
+
+ See also \code{\link{generate_matrix_S}}, \code{\link{proba_max_for_ucb}}
+ and \code{\link{play_arm}}.
+
+ Reward input is checked for correct dimensions and values. See
+ \code{\link{bandit_reward_control}}.
 }
 \examples{
 ## Generate 10000 numbers from 2 binomial  distributions

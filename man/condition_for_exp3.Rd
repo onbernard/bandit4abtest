@@ -4,36 +4,16 @@
 \alias{condition_for_exp3}
 \title{Condition for EXP3}
 \usage{
-condition_for_exp3(S, proba)
+condition_for_exp3(K, proba)
 }
 \arguments{
-\item{S}{Numeric matrix}
+\item{K}{Number of arms}
 
-\item{proba}{Numeric list}
+\item{proba}{Vector of probability weights}
 }
 \value{
 Integer value
 }
 \description{
-Chooses randomly the next arm to play according to the list proba
-}
-\examples{
-## Generates 1000 numbers from 2 binomial distributions
-set.seed(4434)
-K1 <- rbinom(1000, 1, 0.6)
-K2 <- rbinom(1000, 1, 0.7)
-## Define a dataframe of rewards
-visitor_reward <- as.data.frame( cbind(K1,K2) )
-## Number of arms
-K=2
-## Init the S Matrix
-S <- generate_matrix_S(K)
-S
-## play arms uniformly
-for(i in 1:nrow(visitor_reward)){
-S <- play_arm(i,arm=(i\%\%K+1),S,visitor_reward)
-}
-## Results
-S
-condition_for_exp3(S=S, proba = list(0.2, 0.8))
+Samples the arm list according to a vector of probability weights
 }

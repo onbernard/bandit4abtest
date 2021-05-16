@@ -1,34 +1,39 @@
 #'Upper Confidence Bound algorithm
 #'
-#'@description Controls data in visitor_reward with
-#'  \code{\link{bandit_reward_control}}. Generates the UCB computation variables
-#'  in matrix S.
+#'@description The Upper Confidence Bound algorithm is used in stochastic bandit
+#'  with finitely many arms problems. It attributes to each arm an upper bound
+#'  of its reward expectation according to past rewards and number of trials.
+#'
 #'  \itemize{ At each iteration
 #'  \item Computes the upper confidence bounds
-#'  \item Choose the arm with the maximum upper bound (with alpha parameter)
+#'  \item Chooses the arm with the maximum upper bound (with alpha parameter)
 #'  \item Receives a reward in visitor_reward for the arm and associated
 #'  iteration
-#'  \item Updates the UCB computation variables according to that reward
+#'  \item Updates the means and number of trials
 #'  }
-#'  Returns the choice and probability history, computation time, estimated and
-#'  real reward expectations.
-#'  See also
-#'  \code{\link{generate_matrix_S}},
-#'  \code{\link{proba_max_for_ucb}} and
-#'  \code{\link{play_arm}}.
+#'
+#'  The function keeps track of each arm estimated reward expectation and number
+#'  of trials. These are returned at the end of the computation in addition to
+#'  the arm played and at each iteration, the actual reward expectations and the
+#'  computation time.
+#'
+#'  See also \code{\link{generate_matrix_S}}, \code{\link{proba_max_for_ucb}}
+#'  and \code{\link{play_arm}}.
+#'
+#'  Reward input is checked for correct dimensions and values. See
+#'  \code{\link{bandit_reward_control}}.
 #'
 #'@param visitor_reward Dataframe of numeric values
 #'@param alpha          Numeric value. Exploration parameter (optional)
 #'
 #'@return
-#' \itemize{ List of elements :
-#'  \item S         : numeric matrix of UCB parameters
-#'  \item choice    : numeric vector of arm choice history
-#'  \item proba     : numeric vector of max UCB history
-#'  \item time      : total computation time
-#'  \item theta_hat : estimated reward expectations
-#'  \item theta     : real reward expectations
-#'  }
+#' \itemize{ List of element:
+#'  \item S         : Means and trials matrix
+#'  \item choice    : Choice history vector
+#'  \item proba     : Max probability history vector
+#'  \item time      : Computation time
+#'  \item theta_hat : Final estimated reward expectation of each arm
+#'  \item theta     : Actual reward expectation of each arm}
 #'
 #'@examples
 #'## Generate 10000 numbers from 2 binomial  distributions
@@ -53,49 +58,43 @@
 #'
 #'@export
 policy_ucb <- function(visitor_reward, alpha=1) {
+  # Data control
   bandit_reward_control(visitor_reward)
+  # Data formatting
+  visitor_reward <- as.matrix(visitor_reward) * 1
   K <- ncol(visitor_reward)
-  # data formatting
-  visitor_reward <- as.matrix(visitor_reward)
-
-  # choice and max probability history vectors
+  # Choice and max probability history vectors
   choice <- c()
   proba <- c()
-  # UCB computation variables
+  # Means and trials matrix
   S <- GenerateMatrixS(K)
 
   tictoc::tic()
-
-  # initialization : play each arm once
+  # Initialization : play each arm once
   for (j in 1:K) {
-    # compute upper confidence bounds
+    # Compute upper confidence bounds
     upper_confidence_bounds <- proba_max_for_ucb(S, iter, alpha)
-    # store max value
+    # Save max value
     proba[j] <- max(upper_confidence_bounds)
-    # update ucb computation variables
+    # Update mean and number of trial
     S <- play_arm(iter=j, arm=j, S=S, visitor_reward)
-    # store choice
+    # Store choice
     choice[j] <- j
   }
 
   for (i in (K+1):nrow(visitor_reward)) {
-    # compute upper confidence bounds and choose arm with the highest value
+    # Compute upper confidence bounds and choose arm with the highest value
     upper_confidence_bounds <- proba_max_for_ucb(S, iter, alpha)
     choice[i] <- which.max(upper_confidence_bounds)
-    # store said highest value
+    # Store highest value
     proba[i] <-  max(upper_confidence_bounds)
-    # get reward and update computation variables accordingly
+    # Get reward and update means and trials accordingly
     S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
-
   }
-
   time <- tictoc::toc()
 
-
-  # estimated reward expectations
+  # Estimated and actual reward expectations
   th_hat=S[1,]
-
-  # real reward expectations
   th = colMeans(visitor_reward)
 
   message("th_hat")
@@ -113,12 +112,11 @@ policy_ucb <- function(visitor_reward, alpha=1) {
 
 #' Upper Confidence Bound computation function
 #'
-#'@description Computes, for each column of ucb computations variables matrix S
-#'  an upper bound according to the Hoeffding inequality parameterized by
-#'  exploration parameter alpha (default alpha = 1). Returns a vector containing
-#'  each arm upper confidence bound.
+#'@description Computes, for each arm an upper bound according to the Hoeffding
+#'  inequality parameterized by exploration parameter alpha (default alpha = 1).
+#'  Returns a vector containing each arm upper confidence bound.
 #'
-#'@param S     Numeric matrix. UCB computation variables.
+#'@param S     Means and trials matrix
 #'@param iter  Numeric value. Index of iteration.
 #'@param alpha Numeric value. Exploration parameter (optional)
 #'

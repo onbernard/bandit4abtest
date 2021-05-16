@@ -7,7 +7,7 @@
 proba_max_for_ucb(S, iter, alpha = 1)
 }
 \arguments{
-\item{S}{Numeric matrix. UCB computation variables.}
+\item{S}{Means and trials matrix}
 
 \item{iter}{Numeric value. Index of iteration.}
 
@@ -17,10 +17,9 @@ proba_max_for_ucb(S, iter, alpha = 1)
 Numeric vector containing each arm upper confidence bound.
 }
 \description{
-Computes, for each column of ucb computations variables matrix S
- an upper bound according to the Hoeffding inequality parameterized by
- exploration parameter alpha (default alpha = 1). Returns a vector containing
- each arm upper confidence bound.
+Computes, for each arm an upper bound according to the Hoeffding
+ inequality parameterized by exploration parameter alpha (default alpha = 1).
+ Returns a vector containing each arm upper confidence bound.
 }
 \examples{
 ## Generates 1000 numbers from 2 uniform distributions

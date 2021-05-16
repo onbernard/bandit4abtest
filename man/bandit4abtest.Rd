@@ -5,7 +5,8 @@
 \alias{bandit4abtest}
 \title{bandit4abtest Package}
 \description{
-Contains functions for imrpove traditionnal A/B test by methodes from bandit theory.
+Contains functions for improving traditional A/B test with methods from
+bandit theory.
 }
 \author{
 Emmanuelle Claeys \email{claeys@unistra.fr}

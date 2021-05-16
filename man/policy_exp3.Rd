@@ -12,38 +12,33 @@ policy_exp3(visitor_reward, gamma = 0.05)
 \item{gamma}{Numeric value (optional)}
 }
 \value{
-\itemize{ List of elements :
- \item S         : numeric matrix of UCB parameters
- \item choice    : numeric vector of arm choice history
- \item proba     : numeric vector of max UCB history
- \item time      : total computation time
- \item theta_hat : estimated reward expectations
- \item theta     : real reward expectations
- \item weight    : weight coefficient of each arm
- }
+\itemize{ List of element:
+ \item S         : Means and trials matrix
+ \item choice    : Choice history vector
+ \item proba     : Max probability history vector
+ \item time      : Computation time
+ \item theta_hat : Final estimated reward expectation of each arm
+ \item theta     : Actual reward expectation of each arm
+ \item weight    : Final probability weight of each arm}
 }
 \description{
 Exponential  Weights  for  Exploration  and  Exploitation (EXP3)
- bandit strategy. Uses a list of weights which evolve according to arm's
+ bandit strategy. It uses a list of weights which evolve according to arm's
  reward. The gamma parameter is a coefficient for balancing between
  exploitation and exploration.
 
- Control data in visitor_reward with \code{\link{bandit_reward_control}} and
- \code{\link{control_binary}}.
-
- Generates a matrix to save the results (S).
- \itemize{ At each iteration
- \item Update weight parameter for each arm
- \item Chooses randomly an arm according to the distribution of proba
- \item Receives a reward in visitor_reward for the arm and associated
- iteration
- \item Updates the means and trial matrix S. }
-
- Returns the choice and probability history, computation time, estimated
- reward expectations, real reward expectations and weights.
+ When processing a dataframe of reward representing a bandit, the function
+ keeps track of each arm estimated reward expectation and number of trials.
+ These are returned at the end of the computation in addition to the arm
+ played and its associated probability at each iteration, the actual reward
+ expectations, the computation time and the final weights values.
 
  See also  \code{\link{condition_for_exp3}}, \code{\link{generate_matrix_S}},
  and \code{\link{play_arm}}.
+
+ Reward input is checked for correct dimensions and values. These must be
+ binary (either numeric or integer ones and zeros) ! See
+ \code{\link{bandit_reward_control}} and \code{\link{control_binary}}.
 }
 \examples{
 ## Generates 1000 numbers from 2 uniform distributions

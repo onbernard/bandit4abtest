@@ -1,31 +1,31 @@
 #'KL-UCB algorithm
 #'
-#'@description Th Kullback-Leibler Upper Confidence Bound (KL-UCB) algorithm is
+#'@description The Kullback-Leibler Upper Confidence Bound (KL-UCB) algorithm is
 #'  used in stochastic bandit with finitely many arms problems.
 #'
 #'  When processing a dataframe of reward representing a bandit, the function
 #'  keeps track of each arm estimated reward expectation and number of trials.
 #'  These are returned at the end of the computation in addition to the arm
-#'  played and its associated probability at each iteration, the real reward
-#'  expectation and the computation time.
+#'  played and its associated probability at each iteration, the actual reward
+#'  expectations and the computation time.
 #'
-#'  See also  \code{\link{condition_for_KLUCB}}, \code{\link{kl_bernoulli}},
+#'  See also \code{\link{condition_for_klucb}}, \code{\link{kl_bernoulli}},
 #'  \code{\link{generate_matrix_S}}, and \code{\link{play_arm}}.
+#'
+#'  Reward input is checked for correct dimensions and values. See
+#'  \code{\link{bandit_reward_control}}.
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param precision      Numeric value. Bisection method precision (optional)
 #'
 #'@return
 #' \itemize{ List of element:
-#'  \item S         : Numeric matrix of means and trials,
-#'  \item choice    : Choice history vector,
-#'  \item proba     : Probability history vector,
-#'  \item time      : Computation time,
-#'  \item theta_hat : Estimated reward expectation of each arm
-#'  \item theta     : Real reward expectation of each arm
-#'  }
-#'
-#'
+#'  \item S         : Means and trials matrix
+#'  \item choice    : Choice history vector
+#'  \item proba     : Max probability history vector
+#'  \item time      : Computation time
+#'  \item theta_hat : Final estimated reward expectation of each arm
+#'  \item theta     : Actual reward expectation of each arm}
 #'
 #'@examples
 #'## Generates 1000 numbers from 2 uniform distributions
@@ -46,14 +46,13 @@ policy_kl_ucb <- function(visitor_reward, precision=1e-6){
   K <- ncol(visitor_reward)
   # Data formatting
   visitor_reward <- as.matrix(visitor_reward) * 1
+
   # Choice history vector
   choice <- c()
-
   # Mean/Trials matrix
   S <- generate_matrix_S(K)
 
   tictoc::tic()
-  #'
 
   # Initialization : play each arm once
   for (i in 1:K){
@@ -102,6 +101,8 @@ policy_kl_ucb <- function(visitor_reward, precision=1e-6){
 #' @param max_iteration  Maximum number of iterations
 #'
 #' @return A vector containing the arms indices
+#'
+#' @export
 condition_for_klucb <- function(S, d, precision, max_iteration){
   # Vectorized Kullback-Leibler divergence function
   kl_vec <- Vectorize(kl)
@@ -123,9 +124,7 @@ condition_for_klucb <- function(S, d, precision, max_iteration){
 
     count_iteration <- count_iteration + 1
   }
-
   return ((lower + upper) / 2)
-
 }
 
 #'Kullback-Leibler divergence of two Bernoulli distributions

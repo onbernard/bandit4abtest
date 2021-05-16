@@ -7,31 +7,36 @@
 policy_epsilon_greedy(visitor_reward, epsilon = 0.25)
 }
 \arguments{
-\item{visitor_reward}{Dataframe of numeric values}
+\item{visitor_reward}{Dataframe of integer or numeric values}
 
-\item{epsilon}{Numeric value (optional)}
+\item{epsilon}{Numeric value. Exploration parameter (optional)}
 }
 \value{
-\itemize{ List of elements :
- \item S         : numeric matrix of UCB parameters
- \item choice    : numeric vector of arm choice history
- \item proba     : numeric vector of max UCB history
- \item time      : total computation time
- \item theta_hat : estimated reward expectations
- \item theta     : real reward expectations
- }
+\itemize{ List of element:
+ \item S         : Means and trials matrix
+ \item choice    : Choice history vector
+ \item proba     : Max probability history vector
+ \item time      : Computation time
+ \item theta_hat : Final estimated reward expectation of each arm
+ \item theta     : Actual reward expectation of each arm}
 }
 \description{
-Control data in visitor_reward with
- \code{\link{bandit_reward_control}} Stop if something is wrong. Generates a
- matrix to save the results (S). At each iteration play the best arm with a
- probability of 1-epsilon and other arm with probability epsilon. Returns the
- calculation time.
- Returns the choice and probability history, computation time, estimated and
- real reward expectations.
+The epsilon greedy algorithm is used in stochastic bandit with
+ finitely many arms problems. At each iteration, a coin is flipped with
+ success probability epsilon. If it succeeds arm is chosed at random. If not
+ the arm with the highest observed reward expectation. This expectation is
+ updated after observing the result of the draw.
+
+ Doing so, this function keeps track of each arm estimated reward expectation
+ and number of trials. These are returned at the end of the computation in
+ addition to the arm played and at each iteration, the actual reward
+ expectations and the computation time.
 
  See also \code{\link{condition_for_epsilon_greedy}},
  \code{\link{generate_matrix_S}}, and \code{\link{play_arm}}.
+
+ Reward input is checked for correct dimensions and values. See
+ \code{\link{bandit_reward_control}}.
 }
 \examples{
 ## Generates 10000 numbers from 2 binomial  distributions

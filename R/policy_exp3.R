@@ -1,42 +1,35 @@
 #'EXP3 algorithm
 #'
 #'@description Exponential  Weights  for  Exploration  and  Exploitation (EXP3)
-#'  bandit strategy. Uses a list of weights which evolve according to arm's
+#'  bandit strategy. It uses a list of weights which evolve according to arm's
 #'  reward. The gamma parameter is a coefficient for balancing between
 #'  exploitation and exploration.
 #'
-#'  Control data in visitor_reward with \code{\link{bandit_reward_control}} and
-#'  \code{\link{control_binary}}.
-#'
-#'  Generates a matrix to save the results (S).
-#'  \itemize{ At each iteration
-#'  \item Update weight parameter for each arm
-#'  \item Chooses randomly an arm according to the distribution of proba
-#'  \item Receives a reward in visitor_reward for the arm and associated
-#'  iteration
-#'  \item Updates the means and trial matrix S. }
-#'
-#'  Returns the choice and probability history, computation time, estimated
-#'  reward expectations, real reward expectations and weights.
+#'  When processing a dataframe of reward representing a bandit, the function
+#'  keeps track of each arm estimated reward expectation and number of trials.
+#'  These are returned at the end of the computation in addition to the arm
+#'  played and its associated probability at each iteration, the actual reward
+#'  expectations, the computation time and the final weights values.
 #'
 #'  See also  \code{\link{condition_for_exp3}}, \code{\link{generate_matrix_S}},
 #'  and \code{\link{play_arm}}.
+#'
+#'  Reward input is checked for correct dimensions and values. These must be
+#'  binary (either numeric or integer ones and zeros) ! See
+#'  \code{\link{bandit_reward_control}} and \code{\link{control_binary}}.
 #'
 #'@param visitor_reward Dataframe of numeric values
 #'@param gamma          Numeric value (optional)
 #'
 #'@return
-#' \itemize{ List of elements :
-#'  \item S         : numeric matrix of UCB parameters
-#'  \item choice    : numeric vector of arm choice history
-#'  \item proba     : numeric vector of max UCB history
-#'  \item time      : total computation time
-#'  \item theta_hat : estimated reward expectations
-#'  \item theta     : real reward expectations
-#'  \item weight    : weight coefficient of each arm
-#'  }
-#'
-#'
+#' \itemize{ List of element:
+#'  \item S         : Means and trials matrix
+#'  \item choice    : Choice history vector
+#'  \item proba     : Max probability history vector
+#'  \item time      : Computation time
+#'  \item theta_hat : Final estimated reward expectation of each arm
+#'  \item theta     : Actual reward expectation of each arm
+#'  \item weight    : Final probability weight of each arm}
 #'
 #'@examples
 #'## Generates 1000 numbers from 2 uniform distributions
@@ -53,59 +46,47 @@
 #'
 #'@export
 policy_exp3 <- function(visitor_reward, gamma=0.05){
-
   # Data control
   bandit_reward_control(visitor_reward)
-
   # Data formatting
   visitor_reward <- as.matrix(visitor_reward) * 1
-
   # More data control
   control_binary(visitor_reward)
 
+  K <- ncol(visitor_reward)
+  # Vector of probability weights
   weight <- rep(1, times=K)
-  proba <- rep(0, times=K)
+  # Choice, reward and reward probability history vector
   choice <- c()
   reward <- c()
-  estimated_reward <- c()
+  proba <- c()
+  # Means and trials matrix
   S <- generate_matrix_S(K)
-  K <- ncol(visitor_reward)
 
   tictoc::tic()
 
   # Initialization : play each arm once
-  for(h in 1:K) {
-
-    S <- play_arm(iter=h, arm=h, S=S, visitor_reward)
-
-    weight_sum <- sum(weight)
-    proba[h] <- (1 - gamma) * (weight[h]/weight_sum) + (gamma/K)
-
+  for(i in 1:K) {
+    S <- play_arm(iter=i, arm=i, S=S, visitor_reward)
+    choice[i] <- i
     # Get reward
-    reward[h] <- visitor_reward[h,h]
-
-    estimated_reward[h] <- reward[h]/proba[h]
-    # Update weight
-    weight[h] <- weight[h]*exp(gamma*estimated_reward[h]/K)
-
-    choice[1:K] <- c(1:K)
+    reward[i] <- visitor_reward[i,i]
+    # Update
+    expectation <- (1 - gamma) * (1/K) + (gamma/K)
+    proba[i] <- reward[i]/expectation
+    weight[i] <- exp(gamma*proba[i]/K)
   }
-
+  # Iterate over horizon
   for(i in (K+1):nrow(visitor_reward)) {
-    for (j in 1:K){
-      weight_sum <- sum(weight)
-      proba[j] <- (1 - gamma) * (weight[j]/weight_sum) + (gamma/K)
-    }
-
-  choice[i] <- condition_for_exp3(S=S, proba = proba)
-  reward[i] <- visitor_reward[i,choice[i]]
-  S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
-
-  estimated_reward[i] <- reward[i]/proba[choice[i]]
-
-  # Update weight
-  weight[choice[i]] <- weight[choice[i]]*exp(gamma*estimated_reward[i]/K)
-
+    # Compute vector of probabilities and sample it
+    P <- (1 - gamma) * (weight/sum(weight)) + (gamma/K)
+    choice[i] <- condition_for_exp3(K, P)
+    # Get reward
+    reward[i] <- visitor_reward[i,choice[i]]
+    # Update
+    S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
+    proba[i] <- reward[i]/P[choice[i]]
+    weight[choice[i]] <- weight[choice[i]]*exp(gamma*proba[i]/K)
   }
 
   time <- tictoc::toc()
@@ -130,33 +111,14 @@ policy_exp3 <- function(visitor_reward, gamma=0.05){
 
 #'Condition for EXP3
 #'
-#'@description Chooses randomly the next arm to play according to the list proba
+#'@description Samples the arm list according to a vector of probability weights
 #'
-#'@param S     Numeric matrix
-#'@param proba Numeric list
+#'@param K     Number of arms
+#'@param proba Vector of probability weights
 #'
 #'@return Integer value
 #'
-#'@examples
-#'## Generates 1000 numbers from 2 binomial distributions
-#'set.seed(4434)
-#'K1 <- rbinom(1000, 1, 0.6)
-#'K2 <- rbinom(1000, 1, 0.7)
-#'## Define a dataframe of rewards
-#'visitor_reward <- as.data.frame( cbind(K1,K2) )
-#'## Number of arms
-#'K=2
-#'## Init the S Matrix
-#'S <- generate_matrix_S(K)
-#'S
-#'## play arms uniformly
-#'for(i in 1:nrow(visitor_reward)){
-#'S <- play_arm(i,arm=(i%%K+1),S,visitor_reward)
-#'}
-#'## Results
-#'S
-#'condition_for_exp3(S=S, proba = list(0.2, 0.8))
 #'@export
-condition_for_exp3 <- function(S, proba) {
+condition_for_exp3 <- function(K, proba) {
   return(sample(1:K, size=1, replace=TRUE, prob = proba))
 }
