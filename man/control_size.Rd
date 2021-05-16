@@ -7,7 +7,7 @@
 control_size(visitor_reward)
 }
 \arguments{
-\item{visitor_reward}{Dataframe of integer or numeric values}
+\item{visitor_reward}{Dataframe of numeric values}
 }
 \value{
 Logical value

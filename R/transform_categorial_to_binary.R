@@ -7,7 +7,6 @@
 #'@param listInteger list of numerical columns
 #'
 #'@return A dataframe with numerical value
-#'@examples
 
 #'@export
 #transform_categorial_to_binary

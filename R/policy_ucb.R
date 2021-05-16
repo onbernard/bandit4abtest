@@ -54,7 +54,7 @@
 #'@export
 policy_ucb <- function(visitor_reward, alpha=1) {
   bandit_reward_control(visitor_reward)
-
+  K <- ncol(visitor_reward)
   # data formatting
   visitor_reward <- as.matrix(visitor_reward)
 
@@ -66,8 +66,6 @@ policy_ucb <- function(visitor_reward, alpha=1) {
 
   tictoc::tic()
 
-
-  K <- ncol(visitor_reward)
   # initialization : play each arm once
   for (j in 1:K) {
     # compute upper confidence bounds

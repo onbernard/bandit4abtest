@@ -7,9 +7,9 @@
 policy_ucb(visitor_reward, alpha = 1)
 }
 \arguments{
-\item{visitor_reward}{Dataframe of integer or numeric values}
+\item{visitor_reward}{Dataframe of numeric values}
 
-\item{alpha}{Numeric value. Exploration parameter(optional)}
+\item{alpha}{Numeric value. Exploration parameter (optional)}
 }
 \value{
 \itemize{ List of elements :
