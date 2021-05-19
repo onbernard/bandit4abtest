@@ -32,7 +32,7 @@
 #'@import stats
 #'@export
 #
-ReturnRealTheta <- function(dt, visitor_reward,option="linear",listCategorial = NA) {
+return_real_theta <- function(dt, visitor_reward,option="linear",listCategorial = NA) {
 
   K <- ncol(visitor_reward)
   n_f <- ncol(dt)

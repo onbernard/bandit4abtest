@@ -1,28 +1,31 @@
 #'LogitUCB algorithm
 #'
-#'Control data in visitor_reward with \code{\link{BanditRewardControl}} Stop if
-#'something is wrong. \itemize{ At each iteration \item Calculates the arm
-#'probabilities according to a logit regression of context in dt dataframe \item
-#'Choose the arm with the maximum upper bound (with alpha parameter) \item
-#'Receives a reward in visitor_reward for the arm and associated iteration \item
-#'Updates the results matrix S. } Returns the calculation time. Review the
-#'estimated, actual coefficient for each arm. See also
-#'\code{\link{ReturnRealTheta}}, Require \code{\link{tic}} and \code{\link{toc}}
-#'from \code{\link{tictoc}} library
+#'@description The Logistic Upper Confidence Bound algorithm is used to solve
+#'  contextual bandit problem. It assumes that an unknown linear dependence exists
+#'  between context and reward data. Said dependence is modeled through a
+#'  logistic regression when processing a dataframe of contexts and a dataframe
+#'  of rewards representing a bandit.
 #'
-#'@param dt Dataframe of integer or numeric values
-#'@param visitor_reward Dataframe of integer or numeric values
-#'@param K Integer value (optional)
-#'@param alpha Numeric value (optional)
+#'  The function keeps track of the arm choice and associated max probability at
+#'  each iteration. These are returned at the end of the computation in addition
+#'  to the actual and estimated coefficient of each arm and the computation time. See
+#'  \code{\link{return_real_theta}}.
+#'
+#'  Reward and context inputs are checked for correct dimensions and values. See
+#'  \code{\link{bandit_reward_control}} and
+#'  \code{\link{data_control_context_reward}}.
+#'
+#'@param dt             Context data. Dataframe of integer or numeric values
+#'@param visitor_reward Reward data. Dataframe of integer or numeric values
+#'@param alpha          Exploration parameter. Numeric value (optional)
 #'
 #'@return
 #' \itemize{ List of element:
-#'  \item choice: choices of UCB,
-#'  \item proba: probability of the chosen arms,
-#'  \item time: time of cumputation,
-#'  \item theta_hat: coefficients estimated of each arm
-#'  \item theta: real coefficients of each arm
-#'  }
+#'  \item choice    : Choice history vector
+#'  \item proba     : Max probability history vector
+#'  \item time      : Computation time
+#'  \item theta_hat : Final estimated arm coefficients
+#'  \item theta     : Actual arm coefficients}
 #'
 #'@examples
 #'size.tot = 1000
@@ -47,84 +50,63 @@
 #'K3 = vapply(K3, function(x) rbinom(1, 1, x), as.integer(1L))
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
-#'LOGITUCB(dt,visitor_reward)
-#'@import tictoc
+#'policy_logitucb(dt,visitor_reward)
+#'
 #'@export
-#LOGITUCB
-LOGITUCB <- function(dt, visitor_reward, alpha=1, K = ncol(visitor_reward)) {
-
-  #control data
-  DataControlK(visitor_reward, K=K)
-  DataControlContextReward(dt,visitor_reward)
-
-  #data formating
-  visitor_reward <- as.matrix(visitor_reward)
-
-  #Context matrix
-  D <- as.matrix(dt)
+policy_logitucb <- function(dt, visitor_reward, alpha=1) {
+  # Data control
+  bandit_reward_control(visitor_reward)
+  data_control_context_reward(dt, visitor_reward)
+  # Data formatting
+  visitor_reward <- as.matrix(visitor_reward) * 1
+  K <- nrow(visitor_reward)
+  # Context matrix
+  D <- as.matrix(dt) * 1
   n <- nrow(dt)
   n_f <- ncol(D)
-
-  #Keep the past choice for regression
-  choices = list(rep.int(0,n))
-  rewards = list(rep.int(0,n))
-  proba = list(rep.int(0,n))
-
-  #parameters to modelize
-  th_hat = array(0, c(K, n_f))
+  # Keep the past choice for regression
+  choices = c()
+  rewards = c()
+  proba = c()
+  # Parameters to be modeled
+  th_hat = array(0, c(K,n_f))
   colnames(th_hat) <- colnames(dt)
   rownames(th_hat) <- colnames(visitor_reward)
+  # Regression variable
+  b <- matrix(0, K, n_f)
+  A <- array(diag(n_f), c(n_f, n_f, K))
+  # Temporary variable
+  p = rep(0, K)
 
-  #regression variable
-  b <- matrix(0,K, n_f)
-  A <- array(0, c(n_f,n_f,K))
-
-  #tempory variable
-  p = list(rep.int(0,K))
-
-  #time keeper
-  tic()
-
-  #initialization
-  for (j in 1:K) {
-    A[,,j]= diag(n_f)
-  }
-
-
+  tictoc::tic()
   for (i in 1:n) {
     x_i = D[i,]
     for (j in 1:K) {
       A_inv      = solve(A[,,j])
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
-      a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval
-      a_mean     = th_hat[j,] %*% x_i              # current estimate of mean
-      proba_mean =  1/(1+exp(-a_mean))  # inverse logit transform of linear predictor
-       p[j]       = proba_mean + a_upper_ci         # top CI
+      a_upper_ci = alpha * sqrt(ta)           # Upper part of variance interval
+      a_mean     = th_hat[j,] %*% x_i         # Current estimate of mean
+      # Inverse logit transform of linear predictor
+      proba_mean =  1/(1+exp(-a_mean))
+      p[j]       = proba_mean + a_upper_ci    # Top CI
     }
-
-    # choose the highest,
+    # Choose the highest,
     choices[i] = which.max(p)
-
-    #save probability
-    proba[i] = max(unlist(p))
-
-    # see what kind of result we get
-    rewards[i] = visitor_reward[i,as.integer(choices[i])]
-
-    # update the input vector
-    A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i)
-    b[as.integer(choices[i]),] = b[as.integer(choices[i]),] +  x_i * as.numeric(rewards[i])
-
-
+    # Save probability
+    proba[i] = max(p)
+    # Get reward
+    rewards[i] = visitor_reward[i,choices[i]]
+    # Update the input vector
+    A[,,choices[i]] = A[,,choices[i]] + x_i %*% t(x_i)
+    b[choices[i],] = b[choices[i],] +  x_i * rewards[i]
   }
-  time <- toc()
-
-  #return real theta from a rigide regression
-  th <- ReturnRealTheta(dt=dt,visitor_reward=visitor_reward,option="logit")
-
-
-  #return  data , models, groups and results
-  return (list('proba' = unlist(proba),'theta_hat'=th_hat,'theta'=th,'choice'=unlist(choices),'time'=(time$toc - time$tic)))
-
+  time <- tictoc::toc()
+  th <- return_real_theta(dt=dt,visitor_reward=visitor_reward,option = "logit")
+  # Return  data , models, groups and results
+  return(list('proba'     = proba,
+              'theta_hat' = th_hat,
+              'theta'     = th,
+              'choice'    = choices,
+              'time'      = (time$toc - time$tic)))
 }

@@ -25,6 +25,7 @@
 #'
 #'@param visitor_reward Dataframe of numeric values
 #'@param alpha          Numeric value. Exploration parameter (optional)
+#'@param rejec_na       Logical
 #'
 #'@return
 #' \itemize{ List of element:
@@ -57,9 +58,10 @@
 #'ucb_alloc$theta
 #'
 #'@export
-policy_ucb <- function(visitor_reward, alpha=1) {
+policy_ucb <- function(visitor_reward, alpha=1, reject_na=TRUE){
+  # TODO : update documentation
   # Data control
-  bandit_reward_control(visitor_reward)
+  bandit_reward_control(visitor_reward, reject_na)
   # Data formatting
   visitor_reward <- as.matrix(visitor_reward) * 1
   K <- ncol(visitor_reward)
@@ -67,40 +69,62 @@ policy_ucb <- function(visitor_reward, alpha=1) {
   choice <- c()
   proba <- c()
   # Means and trials matrix
-  S <- GenerateMatrixS(K)
+  S <- generate_matrix_S(K)
+  # Other
+  n_missed = 0
 
   tictoc::tic()
   # Initialization : play each arm once
   for (j in 1:K) {
-    # Compute upper confidence bounds
-    upper_confidence_bounds <- proba_max_for_ucb(S, iter, alpha)
-    # Save max value
-    proba[j] <- max(upper_confidence_bounds)
-    # Update mean and number of trial
-    S <- play_arm(iter=j, arm=j, S=S, visitor_reward)
-    # Store choice
-    choice[j] <- j
+    if(is.na(visitor_reward[j,j])){
+      choice[j] <- NA
+      proba[j]  <- NA
+      n_missed  <- n_missed + 1
+    }
+    else{
+      # Compute upper confidence bounds
+      upper_confidence_bounds <- proba_max_for_ucb(S, iter=j, alpha)
+      # Save associated probability
+      proba[j] <- upper_confidence_bounds[j]
+      # Update mean and number of trial
+      S <- play_arm(iter=j, arm=j, S=S, visitor_reward)
+      # Store choice
+      choice[j] <- j
+    }
   }
-
+  # Iterate over horizon
   for (i in (K+1):nrow(visitor_reward)) {
     # Compute upper confidence bounds and choose arm with the highest value
-    upper_confidence_bounds <- proba_max_for_ucb(S, iter, alpha)
-    choice[i] <- which.max(upper_confidence_bounds)
-    # Store highest value
-    proba[i] <-  max(upper_confidence_bounds)
-    # Get reward and update means and trials accordingly
-    S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
+    upper_confidence_bounds <- proba_max_for_ucb(S, iter=i, alpha)
+    c <- which.max(upper_confidence_bounds)
+    if(is.na(visitor_reward[i,c])){
+      choice[i] <- NA
+      proba[i]  <- NA
+      n_missed  <- n_missed + 1
+    }
+    else{
+      choice[i] <- c
+      # Store highest value
+      proba[i] <-  max(upper_confidence_bounds)
+      # Get reward and update means and trials accordingly
+      S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
+    }
   }
   time <- tictoc::toc()
 
   # Estimated and actual reward expectations
-  th_hat=S[1,]
-  th = colMeans(visitor_reward)
+  th_hat <- S[1,]
+  th     <- colMeans(visitor_reward)
 
   message("th_hat")
   message(th_hat)
   message("th real")
   message(th)
+  if(!reject_na){
+    message(paste(
+      'number of used items', nrow(visitor_reward)-n_missed,
+      ', number of excluded items :', n_missed, sep= " " ))
+  }
 
   return (list('S'=S,
                'choice'= choice,

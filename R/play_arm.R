@@ -35,9 +35,9 @@
 #'S
 #'@export
 play_arm <- function(iter, arm, S, visitor_reward) {
-  # mean
+  # Mean
   S[1,arm] <- ((S[1,arm] * S[2,arm] + visitor_reward[iter,arm]) / (S[2,arm] + 1))
-  # trials
+  # Trial
   S[2,arm] = S[2,arm] + 1
   return (S)
 }
