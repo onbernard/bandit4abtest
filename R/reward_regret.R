@@ -89,15 +89,16 @@ averageRegret <- function(choice, visitor_reward,dt,ctree_models,isRewardAreBool
 }
 
 
-cumulative_regret <- function(choice, visitor_reward) {
-  cumsum(simple_regret(choice, visitor_reward))
-}
-
-
 simple_regret <- function(choice, visitor_reward) {
   s <- cbind(1:length(choice),choice)
   apply(visitor_reward,1,max) - visitor_reward[s]
 }
+
+expectation_regret <- function(max_theta, choice, visitor_reward) {
+  s <- cbind(1:length(choice),choice)
+  rep(max_theta, length(choice)) - visitor_reward[s]
+}
+
 
 #'plot(x1, K1)
 #'

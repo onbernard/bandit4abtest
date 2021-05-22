@@ -51,57 +51,49 @@
 #'policy_thompson_sampling(visitor_reward)
 #'
 #'@export
-policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
-  # Data control
-  bandit_reward_control(visitor_reward)
-  # Data formatting
-  visitor_reward <- as.matrix(visitor_reward) * 1
-  K <- ncol(visitor_reward)
-  # More data control
-  control_binary(visitor_reward)
+policy_thompson_sampling <- function(visitor_reward, alpha=1, beta=1, quiet=TRUE) {
+  visitor_reward <- as.matrix(visitor_reward)
+  K       <- ncol(visitor_reward)
+  horizon <- nrow(visitor_reward)
   # Choice and max probability history vectors
-  choice <- c()
-  proba <- c()
+  choice  <- c()
+  proba   <- c()
   # Means and trials matrix
-  S <- generate_matrix_S(K)
+  S       <- generate_matrix_S(K)
 
   tictoc::tic()
   # Initialization : play each arm once
-  choice[1:K] <- c(1:K)
-  proba[1:K] <- 1/K
-  for (j in 1:K) {
-    S <- play_arm(iter=j, arm=j, S=S, visitor_reward)
+  choice[1:K] <- 1:K
+  proba[1:K]  <- 1/K
+  for (t in 1:K) {
+    S <- play_arm(iter=t, arm=t, S=S, visitor_reward)
   }
   # Iterate over horizon
-  for (i in (K+1):nrow(visitor_reward)) {
-    # sample an average from posterior distribution
-    distrib <- condition_for_thompson_sampling(S, alpha, beta)
-    # save the chosen arm
-    choice[i] <- which.max(distrib)
-    # save probability sampled
-    proba[i] <- max(distrib)
-    # update S
-    S <- play_arm(iter=i, arm=choice[i], S, visitor_reward)
+  for (t in (K+1):horizon) {
+    # Sample an average from posterior distribution
+    distrib   <- condition_for_thompson_sampling(S, alpha, beta)
+    # Save the chosen arm
+    choice[t] <- which.max(distrib)
+    # Save probability sampled
+    proba[t]  <- max(distrib)
+    # Update means and trials
+    S <- play_arm(iter=t, arm=choice[t], S, visitor_reward)
+  }
+  time <- tictoc::toc(quiet=quiet)
+
+  if(!quiet){
+    message("th_hat")
+    message(th_hat)
+    message("th real")
+    message(th)
   }
 
-  time <- tictoc::toc()
-
-  # Estimated reward expectations
-  th_hat=S[1,]
-  # Actual reward expectations
-  th = colMeans(visitor_reward)
-
-  message("th_hat")
-  message(th_hat)
-  message("th real")
-  message(th)
-
-  return (list('S'=S,
-               'choice'= choice,
-               'proba' = proba,
-               'time'=(time$toc - time$tic),
-               'theta_hat'=th_hat,
-               'theta'=th))
+  return (list('choice'    = choice,
+               'proba'     = proba,
+               'time'      = time$toc - time$tic,
+               'trials'    = S[2,],
+               'theta_hat' = S[1,],
+               'theta'     = colMeans(visitor_reward)))
 }
 
 #'Condition for thompson sampling
@@ -142,8 +134,8 @@ policy_thompson_sampling  <- function(visitor_reward, alpha=1, beta=1) {
 #'
 #'@export
 condition_for_thompson_sampling <- function(S, alpha=1, beta=1) {
-  distrib <- list()
-  for (j in 1:K) {
+  distrib <- c()
+  for (j in 1:ncol(S)) {
     #Sample a mean from a beta distribution of means
     distrib[j] <- stats::rbeta(1, alpha +  S[1,j]*S[2,j], beta + S[2,j] - S[1,j]*S[2,j])
   }

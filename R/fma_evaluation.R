@@ -1,21 +1,21 @@
 setClass("FMA_evaluation",
          slots = c(
-           visitor_reward    = "data.frame",
-           policy            = "character",
-           S                 = "matrix",
-           choice            = "numeric",
-           proba             = "numeric",
-           time              = "numeric",
-           th_hat            = "numeric",
-           th                = "numeric"),
+           visitor_reward = "data.frame",
+           policy         = "character",
+           choice         = "numeric",
+           proba          = "numeric",
+           time           = "numeric",
+           th_hat         = "numeric",
+           trials         = "numeric",
+           th             = "numeric"),
          prototype = list(
            visitor_reward    = data.frame(),
            policy            = "",
-           S                 = diag(1),
            choice            = c(1),
            proba             = c(1),
            time              = c(1),
            th_hat            = c(1),
+           trials            = c(1),
            th                = c(1))
 )
 
@@ -26,16 +26,21 @@ setValidity("FMA_evaluation", function(object){
 
 # Generics
 setGeneric("run", function(o) standardGeneric("run"))
+setGeneric("policy_parameters", function(o) standardGeneric("policy_parameters"))
 
 # Methods
+# TODO : enrich
 setMethod("plot", signature(x="FMA_evaluation"), function(x, type){
   if(type == "proba"){
     plot(x@proba)
   }
-  else if(type == "regret"){
-    plot(cumulative_regret(x@choice, x@visitor_reward))
+  else if(type == "simple regret"){
+    plot(cumsum(simple_regret(x@choice, x@visitor_reward)))
   }
-  else {
+  else if(type == "expectation regret") {
+    plot(cumsum(expectation_regret(max(x@th), x@choice, x@visitor_reward)))
+  }
+  else if(type == "choices"){
     hist(x@choice)
   }
 })
@@ -57,11 +62,11 @@ setMethod("policy<-", "FMA_evaluation", function(x, value){
   x
 })
 
-setGeneric("S", function(x) standardGeneric("S"))
-setMethod("S", "FMA_evaluation", function(x) x@S)
-setGeneric("S<-", function(x, value) standardGeneric("S<-"))
-setMethod("S<-", "FMA_evaluation", function(x, value){
-  x@S <-value
+setGeneric("trials", function(x) standardGeneric("trials"))
+setMethod("trials", "FMA_evaluation", function(x) x@trials)
+setGeneric("trials<-", function(x, value) standardGeneric("trials<-"))
+setMethod("trials<-", "FMA_evaluation", function(x, value){
+  x@trials <-value
   x
 })
 
